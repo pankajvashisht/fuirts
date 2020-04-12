@@ -207,16 +207,32 @@ class adminController extends ApiController {
 		const users = await DB.first(
 			'select count(*) as total from users where user_type = 1'
 		);
-		const Farmer = await DB.first(
+		const farmer = await DB.first(
 			'select count(id) as total from users where user_type = 2'
+		);
+		const driver = await DB.first(
+			'select count(id) as total from users where user_type = 3'
 		);
 		const orders = await DB.first(
 			'select count(id) as total from orders where order_status =1'
 		);
+		const memberShip = await DB.first(
+			'select count(id) as total from memberships'
+		);
+		const coupon = await DB.first(
+			'select count(id) as total from coupons where is_free=0'
+		);
+		const gifts = await DB.first(
+			'select count(id) as total from coupons where is_free=1'
+		);
 		return {
-			total_farmer: Farmer[0].total,
+			total_farmer: farmer[0].total,
 			total_users: users[0].total,
 			total_orders: orders[0].total,
+			total_driver: driver[0].total,
+			total_coupens: coupon[0].total,
+			total_memberships: memberShip[0].total,
+			total_gifts: gifts[0].total,
 		};
 	}
 

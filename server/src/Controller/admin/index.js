@@ -1,5 +1,10 @@
-const adminController = require("./adminController");
-
+const adminController = require('./adminController');
+const MemberShipController = require('./MemberShipController');
+const GiftController = require('./giftController');
+const CategoryController = require('./CategoryController');
 module.exports = {
-    adminController
-}
+	adminController,
+	MemberShipController,
+	GiftController,
+	CategoryController,
+};
