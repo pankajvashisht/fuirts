@@ -31,6 +31,9 @@ export const appInfo = () => {
 export const updateAppInfo = (data) => {
 	return axios.put(`/appInfo`, data);
 };
+export const drivers = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/drivers/${page}/${limit}?q=${q}`);
+};
 export const addUser = (data) => {
 	const form = new FormData();
 	form.append('name', data.name);

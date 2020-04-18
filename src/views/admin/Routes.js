@@ -11,7 +11,7 @@ const Users = React.lazy(() =>
 	import(/* webpackChunkName: "users" */ './users')
 );
 const Farmer = React.lazy(() =>
-	import(/* webpackChunkName: "shops" */ './Farmer/')
+	import(/* webpackChunkName: "shops" */ './Farmer')
 );
 const FarmerDetails = React.lazy(() =>
 	import(/* webpackChunkName: "shops-details" */ './Farmer/farmerDetails')
@@ -32,10 +32,16 @@ const AddFarmer = React.lazy(() =>
 	import(/* webpackChunkName: "add-farmer" */ './Farmer/AddFarmer')
 );
 const AddUser = React.lazy(() =>
-	import(/* webpackChunkName: "add-shop" */ './Users/AddUser')
+	import(/* webpackChunkName: "add-user" */ './Users/AddUser')
 );
 const Profile = React.lazy(() =>
-	import(/* webpackChunkName: "add-shop" */ './profile')
+	import(/* webpackChunkName: "admin-profile" */ './profile')
+);
+const Driver = React.lazy(() =>
+	import(/* webpackChunkName: "admin-profile" */ './Drivers')
+);
+const AddDriver = React.lazy(() =>
+	import(/* webpackChunkName: "admin-profile" */ './Drivers/AddDriver')
 );
 class App extends Component {
 	render() {
@@ -63,6 +69,8 @@ class App extends Component {
 								path={`/farmers`}
 								render={(props) => <Farmer {...props} />}
 							/>
+							<Route path='/drivers' component={Driver} />
+							<Route path='/add-driver' component={AddDriver} />
 							<Route
 								path={`/add-farmer`}
 								render={(props) => <AddFarmer {...props} />}

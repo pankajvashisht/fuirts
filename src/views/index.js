@@ -1,49 +1,22 @@
-import React, { memo } from "react";
-import { Redirect ,Route, Switch, BrowserRouter as Router} from "react-router-dom";
-import {checkAuth} from  '../utils/helper';
-const AuthRoute = ({ component: Component , ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        checkAuth('LoginUser') ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/admin/login',
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    />
-  );
-}
-
-const ViewApp = React.lazy(() =>
-  import(/* webpackChunkName: "views-app" */ './app')
+import React, { memo, Suspense } from 'react';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+const Admin = React.lazy(() =>
+	import(/* webpackChunkName: "views-app" */ './admin/index')
 );
-const Login = React.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ './login')
+const Web = React.lazy(() =>
+	import(/* webpackChunkName: "views-user" */ './web')
 );
-const Admin = () => {
-  return (
-     <Router basename="admin">
-      <Switch>  
-        <Route
-            expect
-            path="/login"
-            component={Login}
-        />
-        { <AuthRoute
-            path="/"
-            component={ViewApp}
-        /> }
-      </Switch>
-    </Router>
-  );
-
+const Routes = () => {
+	return (
+		<Suspense fallback={<div className='loading' />}>
+			<Router>
+				<Switch>
+					<Route path='/admin' component={Admin} />
+					<Route path='/' component={Web} />
+				</Switch>
+			</Router>
+		</Suspense>
+	);
 };
 
-export default memo(Admin);
+export default memo(Routes);

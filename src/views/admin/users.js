@@ -1,16 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import ListPageHeading from '../../containers/pages/ListPageHeading';
-import Pagination from '../../containers/pages/Pagination';
-import { users } from '../../Apis/admin';
-import { NotificationManager } from '../../components/common/react-notifications';
-import { Card } from 'reactstrap';
-import { NavLink, Link } from 'react-router-dom';
-import classnames from 'classnames';
-import { ContextMenuTrigger } from 'react-contextmenu';
-import { Colxx } from '../../components/common/CustomBootstrap';
-import StatusUpdate from '../../components/UpdateStatus';
-import DeleteData from '../../components/DeleteData';
-import { convertDate } from '../../constants/defaultValues';
+import ListPageHeading from 'containers/pages/ListPageHeading';
+import Pagination from 'containers/pages/Pagination';
+import { users } from 'Apis/admin';
+import { NotificationManager } from 'components/common/react-notifications';
+import { Link } from 'react-router-dom';
+import StatusUpdate from 'components/UpdateStatus';
+import DeleteData from 'components/DeleteData';
+import { convertDate } from 'constants/defaultValues';
 const additional = {
 	currentPage: 1,
 	totalItemCount: 0,
@@ -62,7 +58,7 @@ const Users = React.memo((props) => {
 	const onChangePage = (value) => {
 		setCurrentPage(value);
 	};
-	const onCheckItem = (key, value) => {};
+
 	const DeleteDataLocal = (key) => {
 		totalPosts.splice(key, 1);
 		setTotalPost([...totalPosts]);

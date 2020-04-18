@@ -225,6 +225,15 @@ class adminController extends ApiController {
 		const gifts = await DB.first(
 			'select count(id) as total from coupons where is_free=1'
 		);
+		const categories = await DB.first(
+			'select count(id) as total from categories'
+		);
+		const subCategories = await DB.first(
+			'select count(id) as total from sub_categories'
+		);
+		const paymentMethods = await DB.first(
+			'select count(id) as total from payment_types'
+		);
 		return {
 			total_farmer: farmer[0].total,
 			total_users: users[0].total,
@@ -233,6 +242,9 @@ class adminController extends ApiController {
 			total_coupens: coupon[0].total,
 			total_memberships: memberShip[0].total,
 			total_gifts: gifts[0].total,
+			total_payment_methods: paymentMethods[0].total,
+			total_category: categories[0].total,
+			total_sub_category: subCategories[0].total,
 		};
 	}
 

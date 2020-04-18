@@ -15,11 +15,11 @@ import {
 	Button,
 } from 'reactstrap';
 
-import StatusUpdate from '../../../components/UpdateStatus';
-import { Colxx } from '../../../components/common/CustomBootstrap';
-import SingleLightbox from '../../../components/pages/SingleLightbox';
-import { products } from '../../../Apis/admin';
-import { NotificationManager } from '../../../components/common/react-notifications';
+import StatusUpdate from 'components/UpdateStatus';
+import { Colxx } from 'components/common/CustomBootstrap';
+import SingleLightbox from 'components/pages/SingleLightbox';
+import { products } from 'Apis/admin';
+import { NotificationManager } from 'components/common/react-notifications';
 const FarmerDetails = (props) => {
 	const [shopDetails] = useState({ ...props.location.state.post });
 	const [Products, setProducts] = useState([]);
