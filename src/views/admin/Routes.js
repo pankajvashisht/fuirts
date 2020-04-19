@@ -90,6 +90,15 @@ const AddCoupen = React.lazy(() =>
 const EditCoupens = React.lazy(() =>
 	import(/* webpackChunkName: "edit-coupens" */ './Coupens/EditCoupen')
 );
+const Category = React.lazy(() =>
+	import(/* webpackChunkName: "category" */ './Category')
+);
+const AddCategory = React.lazy(() =>
+	import(/* webpackChunkName: "add-category" */ './Category/AddCategory')
+);
+const EditCategory = React.lazy(() =>
+	import(/* webpackChunkName: "edit-category" */ './Category/EditCategory')
+);
 class App extends Component {
 	render() {
 		return (
@@ -141,6 +150,9 @@ class App extends Component {
 							<Route path='/add-coupen' component={AddCoupen} />
 							<Route path='/edit-coupens' component={EditCoupens} />
 							<Route path='/coupens' component={Coupens} />
+							<Route path='/categories' component={Category} />
+							<Route path='/edit-category' component={EditCategory} />
+							<Route path='/add-category' component={AddCategory} />
 							<Route
 								path='/add-membership-plan'
 								component={AddMemberShipPlan}

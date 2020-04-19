@@ -24,6 +24,7 @@ module.exports = {
 	},
 	addCategory: async (Request) => {
 		const { body } = Request;
+		delete body.image;
 		if (Request.files && Request.files.image) {
 			body.image = await app.upload_pic_with_await(Request.files.image);
 		}

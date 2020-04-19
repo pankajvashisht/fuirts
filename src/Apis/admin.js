@@ -52,6 +52,26 @@ export const addUser = (data) => {
 	return axios.post(`/users`, form);
 };
 
+export const addCategory = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('status', 1);
+	return axios.post(`/category`, form);
+};
+
+export const editCategory = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('id', data.id);
+	return axios.put(`/category`, form);
+};
+
+export const getCategory = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/category/${page}/${limit}?q=${q}`);
+};
+
 export const updateProfile = (data) => {
 	const form = new FormData();
 	form.append('first_name', data.first_name);

@@ -74,7 +74,7 @@ class adminController extends ApiController {
 		const total = `select count(*) as total from users ${conditions}`;
 		const result = {
 			pagination: await super.Paginations(total, offset, limit),
-			result: app.addUrl(await DB.first(query), 'profile'),
+			result: app.addUrl(await DB.first(query), ['profile', 'licence']),
 		};
 		return result;
 	}
