@@ -61,8 +61,8 @@ router
 	.delete(response(admin.deleteData));
 
 router
-	.route('/driver/:offset([0-9]+)?/:limit([0-9]+)?')
-	.get(response(admin.allUser))
+	.route('/drivers/:offset([0-9]+)?/:limit([0-9]+)?')
+	.get(response(admin.allDriver))
 	.post(response(admin.addUser))
 	.put(response(admin.addUser))
 	.delete(response(admin.deleteData));

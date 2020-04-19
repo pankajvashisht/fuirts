@@ -11,69 +11,67 @@ import {
 	Modal,
 	ModalHeader,
 	ModalBody,
-	Button
+	Button,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
-import StatusUpdate from '../../../components/UpdateStatus';
-import { Colxx } from '../../../components/common/CustomBootstrap';
-import SingleLightbox from '../../../components/pages/SingleLightbox';
+import StatusUpdate from 'components/UpdateStatus';
+import { Colxx } from 'components/common/CustomBootstrap';
+import SingleLightbox from 'components/pages/SingleLightbox';
 const DriverDetails = (props) => {
-	const [ driverDetails ] = useState({ ...props.location.state.post });
-	const [ showModel, setShowModel ] = useState(false);
+	const [driverDetails] = useState({ ...props.location.state.post });
+	const [showModel, setShowModel] = useState(false);
 	return (
 		<Fragment>
 			<Row>
-				<Colxx xxs="12">
-					<h1>Shop Details</h1>
-					<Nav tabs className="separator-tabs ml-0 mb-5">
+				<Colxx xxs='12'>
+					<h1>Driver Details</h1>
+					<Nav tabs className='separator-tabs ml-0 mb-5'>
 						<NavItem>
 							<NavLink
 								className={classnames({
 									active: 1,
-									'nav-link': true
+									'nav-link': true,
 								})}
 								location={{}}
-								to="#"
+								to='#'
 							/>
 						</NavItem>
 					</Nav>
 
-					<TabPane tabId="1">
+					<TabPane tabId='1'>
 						<Row>
-							<Colxx xxs="12" lg="4" className="mb-4 col-left">
-								<Card className="mb-4">
-									<div className="position-absolute card-top-buttons" />
+							<Colxx xxs='12' lg='4' className='mb-4 col-left'>
+								<Card className='mb-4'>
+									<div className='position-absolute card-top-buttons' />
 									<SingleLightbox
 										thumb={
-											driverDetails.profile ? (
-												driverDetails.profile
-											) : (
-												'/assets/img/profile-pic.jpg'
-											)
+											driverDetails.profile
+												? driverDetails.profile
+												: '/assets/img/profile-pic.jpg'
 										}
 										large={
-											driverDetails.profile ? (
-												driverDetails.profile
-											) : (
-												'/assets/img/profile-pic.jpg'
-											)
+											driverDetails.profile
+												? driverDetails.profile
+												: '/assets/img/profile-pic.jpg'
 										}
-										className="card-img-top"
+										className='card-img-top'
 									/>
 
 									<CardBody>
-										<p className="text-muted text-small mb-2">{driverDetails.name}</p>
-										<p className="mb-3">Shop infomations</p>
-										<p className="text-muted text-small mb-2">Locations</p>
-										<p className="mb-3">{driverDetails.address}</p>
+										<p className='text-muted text-small mb-2'>
+											{driverDetails.name}
+										</p>
+										<p className='mb-3'>Driver infomations</p>
+										<p className='text-muted text-small mb-2'>Locations</p>
+										<p className='mb-3'>{driverDetails.address}</p>
 									</CardBody>
 								</Card>
 
-								<Card className="mb-4">
+								<Card className='mb-4'>
 									<CardBody>
 										<CardTitle>Details</CardTitle>
-										<div className="remove-last-border remove-last-margin remove-last-padding">
+										<div className='remove-last-border remove-last-margin remove-last-padding'>
 											<div>
 												<b> Name </b> : {driverDetails.name}
 											</div>
@@ -94,9 +92,11 @@ const DriverDetails = (props) => {
 											<div>
 												<b> Status </b> :{' '}
 												<StatusUpdate
-													table="users"
+													table='users'
 													onUpdate={(data) =>
-														(driverDetails.status = driverDetails.status === 1 ? 0 : 1)}
+														(driverDetails.status =
+															driverDetails.status === 1 ? 0 : 1)
+													}
 													data={driverDetails}
 												/>
 											</div>
@@ -105,17 +105,17 @@ const DriverDetails = (props) => {
 									</CardBody>
 								</Card>
 							</Colxx>
-							<Colxx xxs="12" lg="8" className="mb-4 col-right">
+							<Colxx xxs='12' lg='8' className='mb-4 col-right'>
 								<Row>
 									{
-										<Colxx xxs="12" lg="12" xl="12" className="mb-12">
+										<Colxx xxs='12' lg='12' xl='12' className='mb-12'>
 											<Card>
 												<CardBody>
 													<CardTitle>
 														Licence{' '}
 														<Button
-															className="mb-2 float-right"
-															color="primary"
+															className='mb-2 float-right'
+															color='primary'
 															outline
 															onClick={() => {
 																setShowModel(true);
@@ -139,10 +139,16 @@ const DriverDetails = (props) => {
 						</Row>
 					</TabPane>
 				</Colxx>
-				<Modal isOpen={showModel} size="lg" toggle={() => setShowModel(false)}>
-					<ModalHeader toggle={() => setShowModel(false)}>View Licence</ModalHeader>
+				<Modal isOpen={showModel} size='lg' toggle={() => setShowModel(false)}>
+					<ModalHeader toggle={() => setShowModel(false)}>
+						View Licence
+					</ModalHeader>
 					<ModalBody>
-						<CardImg top alt={driverDetails.licence} src={driverDetails.licence} />
+						<CardImg
+							top
+							alt={driverDetails.licence}
+							src={driverDetails.licence}
+						/>
 					</ModalBody>
 				</Modal>
 			</Row>

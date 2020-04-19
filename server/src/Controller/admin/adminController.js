@@ -61,6 +61,24 @@ class adminController extends ApiController {
 		return result;
 	}
 
+	async allDriver(req) {
+		let offset = req.params.offset || 1;
+		const limit = req.params.limit || 20;
+		offset = (offset - 1) * limit;
+		let conditions = 'where user_type = 3';
+		if (req.query.q && req.query.q !== 'undefined') {
+			const { q } = req.query;
+			conditions += ` and name like '%${q}%' or email like '%${q}%' or phone like '%${q}%'`;
+		}
+		const query = `select * from users ${conditions} order by id desc limit ${offset}, ${limit}`;
+		const total = `select count(*) as total from users ${conditions}`;
+		const result = {
+			pagination: await super.Paginations(total, offset, limit),
+			result: app.addUrl(await DB.first(query), 'profile'),
+		};
+		return result;
+	}
+
 	async allFarmer(req) {
 		let offset = req.params.offset || 1;
 		const limit = req.params.limit || 20;
@@ -221,10 +239,10 @@ class adminController extends ApiController {
 			'select count(id) as total from memberships'
 		);
 		const coupon = await DB.first(
-			'select count(id) as total from coupons where is_free=0'
+			'select count(id) as total from coupons where is_free=1'
 		);
 		const gifts = await DB.first(
-			'select count(id) as total from coupons where is_free=1'
+			'select count(id) as total from coupons where is_free=0'
 		);
 		const categories = await DB.first(
 			'select count(id) as total from categories'
