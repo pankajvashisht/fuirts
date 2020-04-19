@@ -112,7 +112,7 @@ const Categories = React.memo(({ match, history }) => {
 								<td>
 									<Link
 										to={{
-											pathname: '/edit-payment-type',
+											pathname: '/edit-category',
 											state: { category },
 										}}
 										className='d-flex'
