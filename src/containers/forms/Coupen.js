@@ -49,7 +49,11 @@ const Coupen = ({
 								type='date'
 								required={true}
 								min={minDate()}
-								value={isEdit ? minDate(coupenForm.start_time) : minDate()}
+								value={
+									isEdit
+										? minDate(coupenForm.start_time)
+										: coupenForm.start_time
+								}
 								onChange={({ target }) =>
 									handleInput('start_time', target.value)
 								}
@@ -64,7 +68,10 @@ const Coupen = ({
 							<Input
 								type='date'
 								required={true}
-								value={isEdit ? minDate(coupenForm.end_time) : minDate()}
+								min={minDate(coupenForm.start_time)}
+								value={
+									isEdit ? minDate(coupenForm.end_time) : coupenForm.end_time
+								}
 								onChange={({ target }) => handleInput('end_time', target.value)}
 								name='end_time'
 								placeholder='End Date'

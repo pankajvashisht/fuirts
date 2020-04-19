@@ -35,7 +35,11 @@ export const getCurrentTime = () => {
 export const minDate = (MinDate = null) => {
 	let today, day, month, year;
 	if (MinDate) {
-		today = new Date(MinDate * 1000);
+		if (isNaN(MinDate)) {
+			today = new Date(MinDate);
+		} else {
+			today = new Date(MinDate * 1000);
+		}
 	} else {
 		today = new Date();
 	}
