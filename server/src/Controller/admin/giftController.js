@@ -1,5 +1,6 @@
 const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
+const app = require('../../../libary/CommanMethod');
 let apis = new ApiController();
 let DB = new Db();
 
@@ -24,6 +25,12 @@ module.exports = {
 	},
 	addGifts: async (Request) => {
 		const { body } = Request;
+		if (body.start_time) {
+			body.start_time = app.UnixTimeStamp(body.start_time);
+		}
+		if (body.end_time) {
+			body.end_time = app.UnixTimeStamp(body.end_time);
+		}
 		return await DB.save('coupons', body);
 	},
 };

@@ -1,5 +1,6 @@
 const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
+const app = require('../../../libary/CommanMethod');
 let apis = new ApiController();
 let DB = new Db();
 
@@ -41,12 +42,13 @@ module.exports = {
 		const total = `select count(*) as total from payment_types ${conditions}`;
 		const result = {
 			pagination: await apis.Paginations(total, offset, limit),
-			result: await DB.first(query, 'logo'),
+			result: app.addUrl(await DB.first(query), 'logo'),
 		};
 		return result;
 	},
 	addPaymentTypes: async (Request) => {
 		const { body } = Request;
+		delete body.logo;
 		if (Request.files && Request.files.logo) {
 			body.logo = await app.upload_pic_with_await(Request.files.logo);
 		}

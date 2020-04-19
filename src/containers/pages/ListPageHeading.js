@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { Row, Button, UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle, Collapse } from 'reactstrap';
+import {
+	Row,
+	Button,
+	UncontrolledDropdown,
+	DropdownMenu,
+	DropdownItem,
+	DropdownToggle,
+	Collapse,
+} from 'reactstrap';
 import { injectIntl } from 'react-intl';
 
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
@@ -11,18 +19,18 @@ class ListPageHeading extends Component {
 		super();
 		this.state = {
 			dropdownSplitOpen: false,
-			displayOptionsIsOpen: false
+			displayOptionsIsOpen: false,
 		};
 	}
 
 	toggleDisplayOptions = () => {
 		this.setState((prevState) => ({
-			displayOptionsIsOpen: !prevState.displayOptionsIsOpen
+			displayOptionsIsOpen: !prevState.displayOptionsIsOpen,
 		}));
 	};
 	toggleSplit = () => {
 		this.setState((prevState) => ({
-			dropdownSplitOpen: !prevState.dropdownSplitOpen
+			dropdownSplitOpen: !prevState.dropdownSplitOpen,
 		}));
 	};
 
@@ -31,37 +39,35 @@ class ListPageHeading extends Component {
 		const {
 			displayMode,
 			changeDisplayMode,
-
+			onClick = () => null,
 			changePageSize,
 			selectedPageSize,
 			totalItemCount,
-
 			startIndex,
 			endIndex,
 			addShow,
 			Addname,
 			onSearchKey,
-			toggleModal,
 			pageSizes,
-			heading
+			heading,
 		} = this.props;
 
 		const { displayOptionsIsOpen } = this.state;
 		return (
 			<Row>
-				<Colxx xxs="12">
-					<div className="mb-2">
+				<Colxx xxs='12'>
+					<div className='mb-2'>
 						<h1>
 							<IntlMessages id={heading} />
 						</h1>
 
-						<div className="text-zero top-right-button-container">
+						<div className='text-zero top-right-button-container'>
 							{addShow && (
 								<Button
-									color="primary"
-									size="lg"
-									className="top-right-button"
-									onClick={() => toggleModal()}
+									color='primary'
+									size='lg'
+									className='top-right-button'
+									onClick={onClick}
 								>
 									<IntlMessages id={Addname} />
 								</Button>
@@ -107,48 +113,57 @@ class ListPageHeading extends Component {
 						{/* <Breadcrumb match={match} /> */}
 					</div>
 
-					<div className="mb-2">
+					<div className='mb-2'>
 						<Button
-							color="empty"
-							className="pt-0 pl-0 d-inline-block d-md-none"
+							color='empty'
+							className='pt-0 pl-0 d-inline-block d-md-none'
 							onClick={this.toggleDisplayOptions}
 						>
-							<IntlMessages id="pages.display-options" />{' '}
-							<i className="simple-icon-arrow-down align-middle" />
+							<IntlMessages id='pages.display-options' />{' '}
+							<i className='simple-icon-arrow-down align-middle' />
 						</Button>
-						<Collapse isOpen={displayOptionsIsOpen} className="d-md-block" id="displayOptions">
-							<span className="mr-3 d-inline-block float-md-left">
+						<Collapse
+							isOpen={displayOptionsIsOpen}
+							className='d-md-block'
+							id='displayOptions'
+						>
+							<span className='mr-3 d-inline-block float-md-left'>
 								<a
-									href="#/"
-									className={`mr-2 view-icon ${displayMode === 'thumblist' ? 'active' : ''}`}
+									href='#/'
+									className={`mr-2 view-icon ${
+										displayMode === 'thumblist' ? 'active' : ''
+									}`}
 									onClick={() => changeDisplayMode('thumblist')}
 								>
 									<ThumbListIcon />
 								</a>
 							</span>
 
-							<div className="d-block d-md-inline-block pt-1">
-								<UncontrolledDropdown className="mr-1 float-md-left btn-group mb-1" />
-								<div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+							<div className='d-block d-md-inline-block pt-1'>
+								<UncontrolledDropdown className='mr-1 float-md-left btn-group mb-1' />
+								<div className='search-sm d-inline-block float-md-left mr-1 mb-1 align-top'>
 									<input
-										type="text"
-										name="keyword"
-										id="search"
+										type='text'
+										name='keyword'
+										id='search'
 										placeholder={messages['menu.search']}
 										onChange={(e) => onSearchKey(e)}
 									/>
 								</div>
 							</div>
-							<div className="float-md-right pt-1">
-								<span className="text-muted text-small mr-1">{`${startIndex}-${endIndex} of ${totalItemCount} `}</span>
-								<UncontrolledDropdown className="d-inline-block">
-									<DropdownToggle caret color="outline-dark" size="xs">
+							<div className='float-md-right pt-1'>
+								<span className='text-muted text-small mr-1'>{`${startIndex}-${endIndex} of ${totalItemCount} `}</span>
+								<UncontrolledDropdown className='d-inline-block'>
+									<DropdownToggle caret color='outline-dark' size='xs'>
 										{selectedPageSize}
 									</DropdownToggle>
 									<DropdownMenu right>
 										{pageSizes.map((size, index) => {
 											return (
-												<DropdownItem key={index} onClick={() => changePageSize(size)}>
+												<DropdownItem
+													key={index}
+													onClick={() => changePageSize(size)}
+												>
 													{size}
 												</DropdownItem>
 											);
@@ -158,7 +173,7 @@ class ListPageHeading extends Component {
 							</div>
 						</Collapse>
 					</div>
-					<Separator className="mb-5" />
+					<Separator className='mb-5' />
 				</Colxx>
 			</Row>
 		);

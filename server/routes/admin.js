@@ -18,6 +18,7 @@ router.get('/', function (req, res) {
 router.post('/login', login, admin.login);
 router.post('/send-push', response(admin.Notification));
 router.get('/dashboard', response(admin.dashboard));
+router.put('/update-status', response(admin.updateData));
 router
 	.route('/users/:offset([0-9]+)?/:limit([0-9]+)?')
 	.get(response(admin.allUser))

@@ -1,5 +1,6 @@
 const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
+const app = require('../../../libary/CommanMethod');
 let apis = new ApiController();
 let DB = new Db();
 
@@ -17,7 +18,7 @@ module.exports = {
 		const total = `select count(*) as total from categories ${conditions}`;
 		const result = {
 			pagination: await apis.Paginations(total, offset, limit),
-			result: await DB.first(query, 'image'),
+			result: app.addUrl(await DB.first(query), 'image'),
 		};
 		return result;
 	},
@@ -49,7 +50,7 @@ module.exports = {
 		const total = `select count(*) as total from sub_categories ${conditions}`;
 		const result = {
 			pagination: await apis.Paginations(total, offset, limit),
-			result: await DB.first(query, 'image'),
+			result: app.addUrl(await DB.first(query), 'image'),
 		};
 		return result;
 	},

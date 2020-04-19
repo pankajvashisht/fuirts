@@ -43,6 +43,50 @@ const Driver = React.lazy(() =>
 const AddDriver = React.lazy(() =>
 	import(/* webpackChunkName: "admin-profile" */ './Drivers/AddDriver')
 );
+const PaymentTypes = React.lazy(() =>
+	import(/* webpackChunkName: "payment-types" */ './PaymentMethod')
+);
+const AddPaymentTypes = React.lazy(() =>
+	import(
+		/* webpackChunkName: "add-payment-types" */ './PaymentMethod/AddPaymentMethod'
+	)
+);
+const EditPaymentTypes = React.lazy(() =>
+	import(
+		/* webpackChunkName: "edit-payment-types" */ './PaymentMethod/EditPaymentMethod'
+	)
+);
+const Gifts = React.lazy(() =>
+	import(/* webpackChunkName: "gifts" */ './Gifts')
+);
+const AddGifts = React.lazy(() =>
+	import(/* webpackChunkName: "add-gift" */ './Gifts/AddGift')
+);
+const EditGifts = React.lazy(() =>
+	import(/* webpackChunkName: "edit-gifts" */ './Gifts/EditGift')
+);
+const MemberShipPlan = React.lazy(() =>
+	import(/* webpackChunkName: "membershipplane" */ './MembershipPlan')
+);
+const AddMemberShipPlan = React.lazy(() =>
+	import(
+		/* webpackChunkName: "add-plan" */ './MembershipPlan/AddMembershipPlan'
+	)
+);
+const EditMemberShipPlan = React.lazy(() =>
+	import(
+		/* webpackChunkName: "edit-plan" */ './MembershipPlan/EditMembershipPlan'
+	)
+);
+const Coupens = React.lazy(() =>
+	import(/* webpackChunkName: "coupens" */ './Coupens')
+);
+const AddCoupen = React.lazy(() =>
+	import(/* webpackChunkName: "add-coupen" */ './Coupens/AddCoupen')
+);
+const EditCoupens = React.lazy(() =>
+	import(/* webpackChunkName: "edit-coupens" */ './Coupens/EditCoupen')
+);
 class App extends Component {
 	render() {
 		return (
@@ -85,6 +129,24 @@ class App extends Component {
 							<Route
 								path={`/app-information`}
 								render={(props) => <AppInformation {...props} />}
+							/>
+							<Route path='/payment-methods' component={PaymentTypes} />
+							<Route path='/add-payment-method' component={AddPaymentTypes} />
+							<Route path='/edit-payment-type' component={EditPaymentTypes} />
+							<Route path='/gifts' component={Gifts} />
+							<Route path='/add-gift' component={AddGifts} />
+							<Route path='/edit-gifts' component={EditGifts} />
+							<Route path='/membership-plans' component={MemberShipPlan} />
+							<Route path='/add-coupen' component={AddCoupen} />
+							<Route path='/edit-coupens' component={EditCoupens} />
+							<Route path='/coupens' component={Coupens} />
+							<Route
+								path='/add-membership-plan'
+								component={AddMemberShipPlan}
+							/>
+							<Route
+								path='/edit-membership-plan'
+								component={EditMemberShipPlan}
 							/>
 							<Redirect to='/error' />
 						</Switch>

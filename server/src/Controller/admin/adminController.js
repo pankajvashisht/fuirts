@@ -173,6 +173,7 @@ class adminController extends ApiController {
 
 	async updateData(req) {
 		const { body } = req;
+		console.log(body);
 		if (body.id === undefined) {
 			throw new ApiError('id is missing', 400);
 		}

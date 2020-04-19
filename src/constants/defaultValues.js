@@ -46,6 +46,16 @@ export const themeRadiusStorageKey = '__theme_radius';
 export const isDemo = true;
 
 export const convertDate = (timestamp) => {
-	let date = new Date(timestamp * 1000);
-	return `${date.getFullYear()} - ${date.getMonth()} - ${date.getDay()}`;
+	const today = new Date(timestamp * 1000);
+	let dd = today.getDate();
+	let mm = today.getMonth() + 1; //January is 0!
+
+	var yyyy = today.getFullYear();
+	if (dd < 10) {
+		dd = '0' + dd;
+	}
+	if (mm < 10) {
+		mm = '0' + mm;
+	}
+	return dd + '-' + mm + '-' + yyyy;
 };

@@ -110,7 +110,7 @@ const data = [
 	{
 		id: 'App Informations',
 		icon: 'iconsminds-monitor---phone',
-		label: 'App Setting',
+		label: 'App Settings',
 		to: '/app-information',
 		subs: [
 			{
@@ -136,7 +136,7 @@ const data = [
 			{
 				icon: 'iconsminds-financial',
 				label: 'Membership Plan',
-				to: '/membership-plan',
+				to: '/membership-plans',
 			},
 		],
 	},

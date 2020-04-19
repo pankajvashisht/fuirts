@@ -64,6 +64,52 @@ export const updateProfile = (data) => {
 	return axios.post(`/admin-profile`, form);
 };
 
+export const addPaymentTypes = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('logo', data.logo);
+	form.append('status', 1);
+	return axios.post(`/payment-types`, form);
+};
+
+export const EditPaymentTypes = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('logo', data.logo);
+	form.append('id', data.id);
+	return axios.put(`/payment-types`, form);
+};
+
+export const paymentMethod = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/payment-types/${page}/${limit}?q=${q}`);
+};
+
+export const updateStatusInfo = (data) => {
+	return axios.put('/update-status', data);
+};
+
+export const getGiftList = (type = 1, page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/gifts/${page}/${limit}?type=${type}&q=${q}`);
+};
+
+export const addGift = (data) => {
+	return axios.post('/gifts', data);
+};
+export const editGift = (data) => {
+	return axios.put('/gifts', data);
+};
+
+export const getMemberShipPlan = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/membership-plan/${page}/${limit}?q=${q}`);
+};
+
+export const addMemberShipPlan = (data) => {
+	return axios.post('/membership-plan', data);
+};
+export const editMemberShipPlan = (data) => {
+	return axios.put('/membership-plan', data);
+};
+
 export const updateUser = (data) => {
 	return axios.put(`/users?`, {
 		table: data.table,
