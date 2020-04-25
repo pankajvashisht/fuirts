@@ -12,11 +12,11 @@ import {
 	Form,
 } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
-import { addUser } from '../../../Apis/admin';
+import { addUser } from 'Apis/admin';
 import Autocomplete from 'react-google-autocomplete';
 import { initialState } from './Constants';
-import { NotificationManager } from '../../../components/common/react-notifications';
-
+import { NotificationManager } from 'components/common/react-notifications';
+import Loading from 'components/Loading';
 const AddFarmers = React.memo(() => {
 	const reducer = (form, action) => {
 		switch (action.key) {
@@ -39,7 +39,7 @@ const AddFarmers = React.memo(() => {
 			.then(() => {
 				setRedirect(true);
 				NotificationManager.success(
-					'Shop add successfully',
+					'Farmer add successfully',
 					'Success',
 					3000,
 					null,
@@ -74,6 +74,7 @@ const AddFarmers = React.memo(() => {
 	}
 	return (
 		<Fragment>
+			<Loading loading={loading} />
 			<Row>
 				<Colxx xxs='12'>
 					<h1>Add Farmer</h1>
@@ -98,7 +99,7 @@ const AddFarmers = React.memo(() => {
 													handleInput('name', target.value)
 												}
 												name='name'
-												placeholder='Shop Name'
+												placeholder='Farmer Name'
 											/>
 										</FormGroup>
 									</Colxx>
@@ -169,6 +170,7 @@ const AddFarmers = React.memo(() => {
 											<Label for='examplePasswordGrid'>Profile</Label>
 											<Input
 												type='file'
+												className='form-control'
 												required={true}
 												onChange={({ target }) =>
 													handleInput('profile', target.files[0])
@@ -183,6 +185,7 @@ const AddFarmers = React.memo(() => {
 											<Label for='examplePasswordGrid'>Licence</Label>
 											<Input
 												type='file'
+												className='form-control'
 												required={true}
 												onChange={({ target }) =>
 													handleInput('licence', target.files[0])
