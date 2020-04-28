@@ -4,7 +4,7 @@ import PerviewImage from 'components/PerviewImage';
 import { Colxx } from 'components/common/CustomBootstrap';
 import Loading from 'components/Loading';
 import { Input, FormGroup, Label, Button, Form } from 'reactstrap';
-const AddPaymentMethod = ({
+const AddCategory = ({
 	onSubmit,
 	handleInput,
 	isEdit = false,
@@ -34,6 +34,7 @@ const AddPaymentMethod = ({
 						<FormGroup>
 							<Label for='examplePasswordGrid'>Image</Label>
 							<Input
+								className='form-control'
 								type='file'
 								onChange={({ target }) => {
 									handleInput('image', target.files[0]);
@@ -63,11 +64,11 @@ const AddPaymentMethod = ({
 		</>
 	);
 };
-AddPaymentMethod.prototype = {
+AddCategory.prototype = {
 	onSubmit: propTypes.func.isRequired,
 	CategoryForm: propTypes.object.isRequired,
 	handleInput: propTypes.func.isRequired,
 	loading: propTypes.bool.isRequired,
 	isEdit: propTypes.bool,
 };
-export default AddPaymentMethod;
+export default AddCategory;

@@ -124,7 +124,7 @@ const Users = React.memo((props) => {
 									>
 										<img
 											alt={post.name}
-											src={post.profile}
+											src={post.profile || '/assets/img/logo.jpeg'}
 											className='list-thumbnail responsive border-0 card-img-left'
 										/>
 									</Link>

@@ -115,7 +115,7 @@ const data = [
 		subs: [
 			{
 				icon: 'simple-icon-settings',
-				label: 'App Infomations',
+				label: 'App Infomation',
 				to: '/app-information',
 			},
 			{
@@ -125,7 +125,7 @@ const data = [
 			},
 			{
 				icon: 'iconsminds-wallet',
-				label: 'Coupen',
+				label: 'coupon',
 				to: '/coupens',
 			},
 			{

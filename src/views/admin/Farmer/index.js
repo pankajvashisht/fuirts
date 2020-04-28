@@ -167,6 +167,7 @@ const Farmer = React.memo((props) => {
 								<td>
 									<DeleteData
 										table='users'
+										view='Farmer'
 										data={post.id}
 										ondelete={() => DeleteDataLocal(key)}
 									>

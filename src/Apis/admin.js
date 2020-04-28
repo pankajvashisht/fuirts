@@ -72,6 +72,28 @@ export const getCategory = (page = 1, limit = 10, q = undefined) => {
 	return axios.get(`/category/${page}/${limit}?q=${q}`);
 };
 
+export const addSubCategoryApi = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('category_id', data.category_id);
+	form.append('status', 1);
+	return axios.post(`/sub-category`, form);
+};
+
+export const editSubCategoryApi = (data) => {
+	const form = new FormData();
+	form.append('name', data.name);
+	form.append('image', data.image);
+	form.append('category_id', data.category_id);
+	form.append('id', data.id);
+	return axios.put(`/sub-category`, form);
+};
+
+export const getSubCategory = (page = 1, limit = 10, q = undefined) => {
+	return axios.get(`/sub-category/${page}/${limit}?q=${q}`);
+};
+
 export const updateProfile = (data) => {
 	const form = new FormData();
 	form.append('first_name', data.first_name);

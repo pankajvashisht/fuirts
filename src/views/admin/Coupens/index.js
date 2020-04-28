@@ -68,9 +68,9 @@ const Coupens = React.memo(({ match, history }) => {
 		<Fragment>
 			<ListPageHeading
 				match={match}
-				heading='Coupens'
+				heading='Coupons'
 				addShow
-				Addname='+ Add New Coupen'
+				Addname='+ Add New Coupon'
 				onClick={() => history.push('/add-coupen')}
 				changePageSize={changePageSize}
 				selectedPageSize={selectedPageSize}
@@ -145,7 +145,7 @@ const Coupens = React.memo(({ match, history }) => {
 									<DeleteData
 										classes='btn-sm'
 										table='coupons'
-										view='coupen'
+										view='Coupon'
 										data={coupen.id}
 										ondelete={() => DeleteDataLocal(key)}
 									>

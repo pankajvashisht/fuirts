@@ -23,7 +23,7 @@ const EditCoupen = React.memo(({ history, location }) => {
 			.then(() => {
 				history.push('/coupens');
 				NotificationManager.success(
-					'Coupen Edit successfully',
+					'Coupon Edit successfully',
 					'Success',
 					3000,
 					null,

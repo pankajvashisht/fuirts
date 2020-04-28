@@ -38,7 +38,7 @@ module.exports = {
 		let conditions = '';
 		if (Request.query.q && Request.query.q !== 'undefined') {
 			const { q } = Request.query;
-			conditions += ` where name like '%${q}%'`;
+			conditions += ` where sub_categories.name like '%${q}%' or categories.name like '%${q}%' `;
 		}
 		if (parseInt(category_id) !== 0) {
 			if (conditions) {
@@ -47,8 +47,8 @@ module.exports = {
 				conditions += ` where category_id = ${category_id}`;
 			}
 		}
-		const query = `select * from sub_categories ${conditions} order by id desc limit ${offset}, ${limit}`;
-		const total = `select count(*) as total from sub_categories ${conditions}`;
+		const query = `select sub_categories.*,categories.name as category_name  from sub_categories join categories on (sub_categories.category_id = categories.id)  ${conditions} order by id desc limit ${offset}, ${limit}`;
+		const total = `select count(*) as total from sub_categories join categories on (sub_categories.category_id = categories.id) ${conditions}`;
 		const result = {
 			pagination: await apis.Paginations(total, offset, limit),
 			result: app.addUrl(await DB.first(query), 'image'),
@@ -57,8 +57,9 @@ module.exports = {
 	},
 	addSubCategory: async (Request) => {
 		const { body } = Request;
-		if (Request.files && Request.files.logo) {
-			body.logo = await app.upload_pic_with_await(Request.files.logo);
+		delete body.image;
+		if (Request.files && Request.files.image) {
+			body.image = await app.upload_pic_with_await(Request.files.image);
 		}
 		return await DB.save('sub_categories', body);
 	},

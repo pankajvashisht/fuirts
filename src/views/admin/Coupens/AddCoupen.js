@@ -23,7 +23,7 @@ const AddCoupen = React.memo(({ history }) => {
 			.then(() => {
 				history.push('/coupens');
 				NotificationManager.success(
-					'Coupen added successfully',
+					'Coupon added successfully',
 					'Success',
 					3000,
 					null,
@@ -56,7 +56,7 @@ const AddCoupen = React.memo(({ history }) => {
 		<Fragment>
 			<Row>
 				<Colxx xxs='12'>
-					<h1>Add Coupen</h1>
+					<h1>Add Coupon</h1>
 					<Separator className='mb-5' />
 				</Colxx>
 			</Row>
@@ -64,7 +64,7 @@ const AddCoupen = React.memo(({ history }) => {
 				<Colxx xxs='12'>
 					<Card>
 						<CardBody>
-							<CardTitle>Add Coupen</CardTitle>
+							<CardTitle>Add coupon</CardTitle>
 							<Coupen
 								onSubmit={addCoupenForm}
 								loading={loading}
