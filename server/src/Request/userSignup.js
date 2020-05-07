@@ -21,7 +21,7 @@ module.exports = async (Request, res, next) => {
 		device_token: Request.body.device_token,
 		card_informations: Request.body.card_informations,
 		dob: Request.body.dob,
-		app_category: Request.body.app_category || 0,
+		app_category_id: Request.body.app_category_id || 1,
 		authorization_key: app.createToken(),
 		otp: 1111, //app.randomNumber(),
 	};
