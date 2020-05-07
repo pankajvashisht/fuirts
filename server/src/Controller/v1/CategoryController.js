@@ -147,7 +147,7 @@ module.exports = {
 	},
 	coupons: async () => {
 		const coupens = await DB.first(
-			`select * from coupens where start_time > ${App.currentTime} and end_time < ${App.currentTime} and is_free=1`
+			`select * from coupens where start_time > ${App.currentTime} and end_time < ${App.currentTime} and is_free=1 and status=1`
 		);
 		return {
 			message: App.Message('coupens'),
@@ -155,7 +155,9 @@ module.exports = {
 		};
 	},
 	gifts: async () => {
-		const gifts = await DB.first(`select * from coupens where  is_free=0`);
+		const gifts = await DB.first(
+			`select * from coupens where  is_free=0 and status=1`
+		);
 		return {
 			message: App.Message('gifts'),
 			data: gifts,

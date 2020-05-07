@@ -1,6 +1,10 @@
 module.exports = {
 	en: {
 		rating: 'Shop ratings',
+		coupens: 'coupon listing',
+		payments: 'Payment types listing',
+		memberShip: 'Membership plans listing',
+		gifts: 'Gift Listing',
 		appCategory: 'Application Category Listing',
 		category: 'Category Listing',
 		subCategory: 'Sub Category Listing',
@@ -72,6 +76,10 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		memberShip: `Liste des plans d'adhésion`,
+		payments: 'Liste des types de paiement',
+		coupens: 'liste des coupons',
+		gifts: 'Liste de cadeaux',
 		rating: 'Évaluations de la boutique',
 		shopListing: 'liste de la boutique',
 		appCategory: `Liste des catégories d'application`,
