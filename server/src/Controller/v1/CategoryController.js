@@ -112,4 +112,53 @@ module.exports = {
 			},
 		};
 	},
+	memberShipPlan: async () => {
+		const memberShip = await DB.find('memberships', 'all', {
+			conditions: {
+				status: 1,
+			},
+		});
+		return {
+			message: App.Message('memberShip'),
+			data: memberShip,
+		};
+	},
+	memberShipPlan: async () => {
+		const memberShip = await DB.find('memberships', 'all', {
+			conditions: {
+				status: 1,
+			},
+		});
+		return {
+			message: App.Message('memberShip'),
+			data: App.addUrl(memberShip, 'image'),
+		};
+	},
+	paymentType: async () => {
+		const payments = await DB.find('payment_types', 'all', {
+			conditions: {
+				status: 1,
+			},
+		});
+		return {
+			message: App.Message('payments'),
+			data: App.addUrl(payments, 'logo'),
+		};
+	},
+	coupons: async () => {
+		const coupens = await DB.first(
+			`select * from coupens where start_time > ${App.currentTime} and end_time < ${App.currentTime} and is_free=1`
+		);
+		return {
+			message: App.Message('coupens'),
+			data: coupens,
+		};
+	},
+	gifts: async () => {
+		const gifts = await DB.first(`select * from coupens where  is_free=0`);
+		return {
+			message: App.Message('gifts'),
+			data: gifts,
+		};
+	},
 };
