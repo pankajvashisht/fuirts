@@ -9,6 +9,10 @@ const skipRoutes = {
 	category: 'GET',
 	'sub-category': 'GET',
 	'shop/listing': 'GET',
+	'membership-plan': 'GET',
+	'payment-types': 'GET',
+	coupens: 'GET',
+	gifts: 'GET',
 	product: 'GET',
 	rating: 'GET',
 };

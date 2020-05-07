@@ -46,6 +46,10 @@ router.get(
 	'/sub-category/:category_id([0-9]+)',
 	Apiresponse(CategoryController.subCategories)
 );
+router.get('/membership-plan', Apiresponse(CategoryController.memberShipPlan));
+router.get('/payment-types', Apiresponse(CategoryController.paymentType));
+router.get('/coupens', Apiresponse(CategoryController.coupons));
+router.get('/gifts', Apiresponse(CategoryController.gifts));
 router.get(
 	'/order-details/:order_id([0-9]+)',
 	Apiresponse(ShopController.orderDetails)
