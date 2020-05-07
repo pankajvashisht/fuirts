@@ -7,20 +7,29 @@ let DB = new Db();
 
 module.exports = {
 	getShop: async (Request) => {
-		let offset = Request.params.offset || 1;
-		const limit = Request.query.limit || 10;
-		const search = Request.query.search || '';
-		const lalitude = Request.query.lalitude || 0;
-		const longitude = Request.query.longitude || 0;
+		let offset = Request.query.offset || 1;
+		const {
+			limit = 10,
+			latitude = 0,
+			longitude = 0,
+			search = '',
+			newShop = false,
+			highRated = false,
+		} = Request.query;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
 				user_type: 2,
-				status: 1
+				status: 1,
+				location: [
+					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < 20`,
+				],
 			},
 			fields: [
 				'id',
-				'name',
+				'first_name',
+				'last_name',
+				'accept_order',
 				'status',
 				'is_free',
 				'is_online',
@@ -33,21 +42,30 @@ module.exports = {
 				'latitude',
 				'longitude',
 				`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
-				`round(( 6371 * acos( cos( radians(${lalitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${lalitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`
+				`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
 			],
-			having: [ 'total_distance <= 10' ],
-			limit: [ offset, limit ],
-			orderBy: [ 'id desc' ]
+			limit: [offset, limit],
+			orderBy: ['first_name desc'],
 		};
+		if (newShop) {
+			condition['orderBy'] = ['id desc'];
+		}
+		if (highRated) {
+			condition['orderBy'] = ['rating desc'];
+		}
 		if (search) {
 			condition.conditions[`like`] = {
-				name: search
+				first_name: search,
+				last_name: search,
 			};
 		}
 		const result = await DB.find('users', 'all', condition);
 		return {
-			message: 'shop list',
-			data: app.addUrl(result, 'profile')
+			message: app.Message('shopListing'),
+			data: {
+				pagination: await apis.Paginations('users', condition, offset, limit),
+				result: app.addUrl(result, 'image'),
+			},
 		};
 	},
 	getReview: async (Request) => {
@@ -57,9 +75,9 @@ module.exports = {
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
-				shop_id
+				shop_id,
 			},
-			join: [ 'users on (ratings.user_id = users.id)' ],
+			join: ['users on (ratings.user_id = users.id)'],
 			fields: [
 				'ratings.*',
 				'name',
@@ -69,36 +87,36 @@ module.exports = {
 				'email',
 				'phone',
 				'phone_code',
-				'profile'
+				'profile',
 			],
-			limit: [ offset, limit ],
-			orderBy: [ 'ratings.id desc' ]
+			limit: [offset, limit],
+			orderBy: ['ratings.id desc'],
 		};
 		const result = await DB.find('ratings', 'all', condition);
 		return {
-			message: 'shop list',
-			data: app.addUrl(result, 'profile')
+			message: app.Message('rating'),
+			data: app.addUrl(result, 'profile'),
 		};
 	},
-	orderHoohuk: async (Request) => {
+	orderFurit: async (Request) => {
 		const required = {
 			user_id: Request.body.user_id,
 			product_id: Request.body.product_id,
 			quantity: Request.body.quantity || 1,
-			service_fees: Request.body.quantity || 0,
-			taxes: Request.body.quantity || 0,
+			service_fees: Request.body.service_fees || 0,
+			taxes: Request.body.taxes || 0,
 			order_date: Request.body.order_date || app.currentTime,
 			address: Request.body.address || '',
 			latitude: Request.body.latitude || 0,
 			longitude: Request.body.longitude || 0,
 			appartment_street_number: Request.body.appartment_street_number || '',
-			status: 1
+			status: 1,
 		};
 		const RequestData = await apis.vaildation(required, {});
 		const product = await DB.find('products', 'first', {
 			conditions: {
-				id: RequestData.product_id
-			}
+				id: RequestData.product_id,
+			},
 		});
 		if (!product) throw new ApiError('Invaild product id', 422);
 		RequestData.shop_id = product.user_id;
@@ -112,7 +130,7 @@ module.exports = {
 			address: RequestData.address,
 			latitude: RequestData.latitude,
 			longitude: RequestData.longitude,
-			appartment_street_number: RequestData.appartment_street_number
+			appartment_street_number: RequestData.appartment_street_number,
 		});
 		RequestData.order_id = await DB.save('orders', RequestData);
 		product.order_id = RequestData.order_id;
@@ -120,12 +138,12 @@ module.exports = {
 			apis.sendPush(RequestData.shop_id, {
 				message: 'You have new order',
 				data: product,
-				notification_code: 1
+				notification_code: 1,
 			});
 		}, 100);
 		return {
 			message: 'Order add Successfully',
-			data: RequestData
+			data: RequestData,
 		};
 	},
 	doPayment: async (Request) => {
@@ -133,20 +151,20 @@ module.exports = {
 			user_id: Request.body.user_id,
 			order_id: Request.body.order_id,
 			payment_datials: Request.body.payment_datials,
-			status: Request.body.status // 0 -> fail 1-> success
+			status: Request.body.status, // 0 -> fail 1-> success
 		};
 		const RequestData = await apis.vaildation(required, {});
 		const condition = {
 			conditions: {
-				id: RequestData.order_id
-			}
+				id: RequestData.order_id,
+			},
 		};
 		const result = await DB.find('orders', 'first', condition);
 		if (!result) throw new ApiError('Invaild order id', 422);
 		RequestData.booking_id = await DB.save('payments', RequestData);
 		return {
 			message: 'Payment Successfully',
-			data: RequestData
+			data: RequestData,
 		};
 	},
 	giveRating: async (Request) => {
@@ -154,14 +172,14 @@ module.exports = {
 			user_id: Request.body.user_id,
 			shop_id: Request.body.shop_id,
 			rating: Request.body.rating,
-			comment: Request.body.comment
+			comment: Request.body.comment,
 		};
 		const RequestData = await apis.vaildation(required, {});
 		const condition = {
 			conditions: {
 				id: RequestData.shop_id,
-				user_type: 2
-			}
+				user_type: 2,
+			},
 		};
 		const result = await DB.find('users', 'first', condition);
 		if (!result) throw new ApiError('Invaild shop id', 422);
@@ -170,12 +188,12 @@ module.exports = {
 			apis.sendPush(RequestData.shop_id, {
 				message: `${Request.body.userInfo.name} give you rating ${RequestData.rating}`,
 				data: RequestData,
-				notification_code: 2
+				notification_code: 2,
 			});
 		}, 100);
 		return {
 			message: 'Rating Successfully',
-			data: RequestData
+			data: RequestData,
 		};
 	},
 	myOrders: async (Request) => {
@@ -188,7 +206,7 @@ module.exports = {
 		const conditions = {};
 		if (parseInt(order_status) === 0) {
 			conditions['NotEqual'] = {
-				order_status: 4
+				order_status: 4,
 			};
 		} else {
 			conditions['order_status'] = 4;
@@ -202,11 +220,15 @@ module.exports = {
 		}
 		const condition = {
 			conditions,
-			join: [ 'users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)' ],
-			limit: [ offset, limit ],
+			join: [
+				'users on (users.id =  orders.user_id)',
+				'users as shops on (shops.id = orders.shop_id)',
+			],
+			limit: [offset, limit],
 			fields: [
 				'orders.*',
-				'users.name',
+				'users.first_name',
+				'users.last_name',
 				'users.email',
 				'users.phone',
 				'users.phone_code',
@@ -214,16 +236,17 @@ module.exports = {
 				'users.latitude',
 				'users.longitude',
 				'users.profile',
-				'shops.name as shop_name',
+				'shop.accept_order',
+				'shops.first_name as shop_name',
 				'shops.email as shop_email',
 				'shops.phone as shop_phone',
 				'shops.phone_code as shop_phone_code',
 				'shops.address as shop_address',
 				'shops.latitude as shop_lat',
 				'shops.longitude as shop_lng',
-				'shops.profile as shop_profile'
+				'shops.profile as shop_profile',
 			],
-			orderBy: [ 'orders.id desc' ]
+			orderBy: ['orders.id desc'],
 		};
 		const result = await DB.find('orders', 'all', condition);
 		const final = result.map((value) => {
@@ -239,8 +262,8 @@ module.exports = {
 			message: 'My orders',
 			data: {
 				pagination: await apis.Paginations('orders', condition, offset, limit),
-				result: app.addUrl(final, [ 'profile', 'shop_profile' ])
-			}
+				result: app.addUrl(final, ['profile', 'shop_profile']),
+			},
 		};
 	},
 	orderDetails: async (Request) => {
@@ -248,7 +271,7 @@ module.exports = {
 		const user_type = Request.body.userInfo.user_type;
 		const order_id = Request.params.order_id;
 		const conditions = {
-			'orders.id': order_id
+			'orders.id': order_id,
 		};
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
@@ -259,7 +282,10 @@ module.exports = {
 		}
 		const condition = {
 			conditions,
-			join: [ 'users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)' ],
+			join: [
+				'users on (users.id =  orders.user_id)',
+				'users as shops on (shops.id = orders.shop_id)',
+			],
 			fields: [
 				'orders.*',
 				'users.name',
@@ -277,9 +303,9 @@ module.exports = {
 				'shops.address as shop_address',
 				'shops.latitude as shop_lat',
 				'shops.longitude as shop_lng',
-				'shops.profile as shop_profile'
+				'shops.profile as shop_profile',
 			],
-			orderBy: [ 'orders.id desc' ]
+			orderBy: ['orders.id desc'],
 		};
 		const result = await DB.find('orders', 'all', condition);
 		if (result.length === 0) throw new ApiError('Invaild order id', 403);
@@ -294,7 +320,7 @@ module.exports = {
 		});
 		return {
 			message: 'orders Details',
-			data: app.addUrl(final, [ 'profile', 'shop_profile' ])[0]
+			data: app.addUrl(final, ['profile', 'shop_profile'])[0],
 		};
-	}
+	},
 };

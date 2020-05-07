@@ -1,7 +1,8 @@
 const setLanguage = (Request, Res, next) => {
-    Request.lang = 'en';
-    global._Lang = 'en';
-    return next();
-}
+	const { lang = 'en' } = Request.query;
+	Request.lang = lang;
+	global._Lang = lang;
+	return next();
+};
 
 module.exports = setLanguage;

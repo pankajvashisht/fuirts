@@ -2,7 +2,8 @@ const { vaildation } = require('../../utils/DataValidation');
 const app = require('../../libary/CommanMethod');
 module.exports = async (Request, res, next) => {
 	const requried = {
-		name: Request.body.name,
+		first_name: Request.body.first_name,
+		last_name: Request.body.last_name,
 		email: Request.body.email,
 		phone: Request.body.phone,
 		phone_code: Request.body.phone_code,
@@ -11,7 +12,7 @@ module.exports = async (Request, res, next) => {
 		longitude: Request.body.longitude,
 		address: Request.body.address,
 		user_type: Request.body.user_type,
-		checkexist: 1
+		checkexist: 1,
 	};
 	const non_required = {
 		device_type: Request.body.device_type,
@@ -20,8 +21,9 @@ module.exports = async (Request, res, next) => {
 		device_token: Request.body.device_token,
 		card_informations: Request.body.card_informations,
 		dob: Request.body.dob,
+		app_category: Request.body.app_category || 0,
 		authorization_key: app.createToken(),
-		otp: 1111 //app.randomNumber(),
+		otp: 1111, //app.randomNumber(),
 	};
 	try {
 		Request.RequestData = await vaildation(requried, non_required);

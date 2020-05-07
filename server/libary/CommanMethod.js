@@ -10,14 +10,14 @@
  * send mail , push , file upload etc .
  * when function cal then that file import at moment.
  */
-const { config, mails, SMS } = require('../config');
+const { config, mails, SMS, lang } = require('../config');
 const fs = require('fs');
 const crypto = require('crypto');
-
+const twilio = require('twilio');
+const { MailClient } = require('./mails');
 module.exports = {
 	send_mail: function (object) {
-		let { nodemailer } = require('./mails');
-		const Sendmails = new nodemailer(mails[mails.default]);
+		const Sendmails = new MailClient(mails[mails.default]);
 		Sendmails.to(object.to)
 			.subject(object.subject)
 			.html(object.template, object.data)
@@ -85,7 +85,6 @@ module.exports = {
 	stripe: async function () {},
 	brain_tree: async function () {},
 	sendSMS: (data) => {
-		const twilio = require('twilio');
 		const { accountSid, authToken, sendNumber } = SMS[SMS.default];
 		const client = new twilio(accountSid, authToken);
 		client.messages
@@ -151,27 +150,27 @@ module.exports = {
 	},
 
 	createToken() {
-		let key = 'abc' + new Date().getTime();
+		const key = 'abc' + new Date().getTime();
 		return crypto.createHash('sha1').update(key).digest('hex');
 	},
 	addUrl(data, key, folder = 'uploads') {
 		if (data.length === 0) {
 			return [];
 		}
-		data.forEach((element, keys) => {
+		return data.map((element) => {
 			if (!Array.isArray(key)) {
-				if (data[keys][key].length > 0) {
-					data[keys][key] = appURL + folder + '/' + data[keys][key];
+				if (element[key].length > 0) {
+					element[key] = appURL + folder + '/' + element[key];
 				}
 			} else {
 				for (const names of key) {
-					if (data[keys][names].length > 0) {
-						data[keys][names] = appURL + folder + '/' + data[keys][names];
+					if (element[names].length > 0) {
+						element[names] = appURL + folder + '/' + element[names];
 					}
 				}
 			}
+			return element;
 		});
-		return data;
 	},
 	createHash(key, hash = 'sha1') {
 		return crypto.createHash(hash).update(key).digest('hex');
@@ -210,5 +209,8 @@ module.exports = {
 	},
 	UnixTimeStamp(date) {
 		return Math.round(new Date(date).getTime() / 1000, 0);
+	},
+	Message(message) {
+		return lang[_Lang][message] || 'something batter';
 	},
 };
