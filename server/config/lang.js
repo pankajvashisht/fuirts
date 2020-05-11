@@ -1,5 +1,12 @@
 module.exports = {
 	en: {
+		defualtAdress: 'Default address details',
+		addressList: 'Address listing',
+		addressDetails: 'Address details',
+		updateAddress: 'Address updated successfully',
+		AddressDelete: 'Address deleted successfully',
+		addAddress: 'Address added successfully',
+		InvaildAddress: 'Invalid address id',
 		rating: 'Shop ratings',
 		coupens: 'coupon listing',
 		payments: 'Payment types listing',
@@ -76,6 +83,13 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		addressList: `Liste d'adresses`,
+		defualtAdress: `Détails de l'adresse par défaut`,
+		addressDetails: `Détails de l'adresse`,
+		updateAddress: 'Adresse mise à jour avec succès',
+		AddressDelete: 'Adresse supprimée avec succès',
+		InvaildAddress: `Identifiant d'adresse invalide`,
+		addAddress: 'Adresse ajoutée avec succès',
 		memberShip: `Liste des plans d'adhésion`,
 		payments: 'Liste des types de paiement',
 		coupens: 'liste des coupons',

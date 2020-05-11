@@ -4,6 +4,7 @@ const ShopController = require('./ShopController');
 const DriverController = require('./DriverController');
 const PaymentController = require('./PaymentController');
 const CategoryController = require('./CategoryController');
+const AddressController = require('./AddressController');
 module.exports = {
 	UserController,
 	ProductController,
@@ -11,4 +12,5 @@ module.exports = {
 	ShopController,
 	PaymentController,
 	CategoryController,
+	AddressController,
 };

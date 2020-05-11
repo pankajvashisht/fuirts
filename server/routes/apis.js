@@ -6,6 +6,7 @@ const {
 	ProductController,
 	ShopController,
 	CategoryController,
+	AddressController,
 } = require('../src/Controller/v1/index');
 const { userSignup } = require('../src/Request');
 const {
@@ -59,7 +60,7 @@ router.post('/accept-order', Apiresponse(ProductController.OrderAccept));
 router.post('/complete-order', Apiresponse(DriverController.CompleteOrders));
 router.post('/track-driver', Apiresponse(DriverController.TrackDriver));
 router.get(
-	'/product-detail/:product_id([0-9]+)',
+	'/product/:product_id([0-9]+)',
 	Apiresponse(ProductController.productDetails)
 );
 router
@@ -68,6 +69,20 @@ router
 	.post(Apiresponse(ProductController.addProduct))
 	.put(Apiresponse(ProductController.updateProduct))
 	.delete(Apiresponse(ProductController.deleteProduct));
+router
+	.route('/user/address')
+	.get(Apiresponse(AddressController.allAddress))
+	.post(Apiresponse(AddressController.addAddress))
+	.put(Apiresponse(AddressController.updateAddress))
+	.delete(Apiresponse(AddressController.deleteAddress));
+router.get(
+	'/user/address/:address_id([0-9]+)',
+	Apiresponse(AddressController.details)
+);
+router.get(
+	'/user/address/default',
+	Apiresponse(AddressController.defaultAddress)
+);
 router
 	.route('/rating')
 	.get(Apiresponse(ShopController.getReview))
