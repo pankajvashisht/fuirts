@@ -37,11 +37,16 @@ module.exports = {
 			address_id: Request.body.address_id,
 			user_id: Request.body.user_id,
 		};
-		const requestData = await apis.vaildation(required, {});
+		const requestData = await Apis.vaildation(required, {});
 		const { address_id, user_id } = requestData;
-		const addressInfo = await this.addressDetails(address_id, user_id);
-		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress', 422));
+		const addressInfo = await addressDetails(address_id, user_id);
+		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress'), 422);
 		await DB.first(`delete from user_addresses where id = ${address_id}`);
+		if (addressInfo.is_default === 1) {
+			await DB.first(
+				`update user_addresses set is_default=1 where user_id=${user_id} order by created desc limit 1`
+			);
+		}
 		return {
 			message: App.Message('AddressDelete'),
 			status: 204,
@@ -64,8 +69,8 @@ module.exports = {
 		};
 		const requestData = await Apis.vaildation(required, nonRequired);
 		const { address_id, user_id, is_default = 0 } = requestData;
-		const addressInfo = await this.addressDetails(address_id, user_id);
-		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress', 422));
+		const addressInfo = await addressDetails(address_id, user_id);
+		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress'), 422);
 		requestData.id = address_id;
 		await DB.save('user_addresses', requestData);
 		if (parseInt(is_default) === 1) {
@@ -75,30 +80,14 @@ module.exports = {
 		}
 		return {
 			message: App.Message('updateAddress'),
-			data: await this.addressDetails(address_id, user_id),
+			data: await addressDetails(address_id, user_id),
 		};
-	},
-	addressDetails: async function (id, user_id) {
-		return await DB.find('user_addresses', 'first', {
-			conditions: {
-				id,
-				user_id,
-			},
-		});
-	},
-	defaultAddressDetails: async function (user_id) {
-		return await DB.find('user_addresses', 'first', {
-			conditions: {
-				user_id,
-				is_default: 1,
-			},
-		});
 	},
 	details: async (Request) => {
 		const { address_id } = Request.params;
 		const { user_id } = Request.body;
-		const addressInfo = await this.addressDetails(address_id, user_id);
-		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress', 422));
+		const addressInfo = await addressDetails(address_id, user_id);
+		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress'), 422);
 		return {
 			message: App.Message('addressDetails'),
 			data: addressInfo,
@@ -108,10 +97,10 @@ module.exports = {
 		const { user_id } = Request.body;
 		return {
 			message: App.Message('defualtAdress'),
-			data: await this.defaultAddressDetails(user_id),
+			data: await defaultAddressDetails(user_id),
 		};
 	},
-	allAddress: async () => {
+	allAddress: async (Request) => {
 		let offset = Request.query.offset || 1;
 		const { user_id } = Request.body;
 		const { limit = 10, search = '' } = Request.query;
@@ -143,4 +132,21 @@ module.exports = {
 			},
 		};
 	},
+};
+
+const addressDetails = async (id, user_id) => {
+	return await DB.find('user_addresses', 'first', {
+		conditions: {
+			id,
+			user_id,
+		},
+	});
+};
+const defaultAddressDetails = async (user_id) => {
+	return await DB.find('user_addresses', 'first', {
+		conditions: {
+			user_id,
+			is_default: 1,
+		},
+	});
 };
