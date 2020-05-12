@@ -23,7 +23,7 @@ module.exports = async (Request, res, next) => {
 		dob: Request.body.dob,
 		app_category_id: Request.body.app_category_id || 1,
 		authorization_key: app.createToken(),
-		otp: 1111, //app.randomNumber(),
+		status: 1, //app.randomNumber(),
 	};
 	try {
 		Request.RequestData = await vaildation(requried, non_required);

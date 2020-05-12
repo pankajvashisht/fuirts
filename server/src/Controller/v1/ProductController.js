@@ -7,54 +7,59 @@ let DB = new Db();
 
 module.exports = {
 	getProduct: async (Request) => {
-		let offset = Request.params.offset || 1;
-		const limit = Request.query.limit || 10;
-		const search = Request.query.search || '';
-		const user_id = Request.query.shop_id || Request.body.user_id;
+		let offset = Request.query.offset || 1;
+		const { limit = 10, search = '', shop_id } = Request.query;
+		const user_id = shop_id || Request.body.user_id;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
 				'products.status': 1,
-				user_id
+				user_id,
 			},
-			join: [ 'users on (users.id = products.user_id)' ],
+			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
 				'users.name as shop_name',
 				'users.address',
 				'users.profile',
 				'users.service_fees',
-				'users.taxes'
+				'users.delivery_charges',
+				'users.taxes',
 			],
-			limit: [ offset, limit ],
-			orderBy: [ 'id desc' ]
+			limit: [offset, limit],
+			orderBy: ['id desc'],
 		};
 		if (search) {
 			condition.conditions[`like`] = {
 				name: search,
-				location: search
+				description: search,
 			};
 		}
 		const result = await DB.find('products', 'all', condition);
 		return {
 			message: 'products list',
 			data: {
-				pagination: await apis.Paginations('products', condition, offset, limit),
-				result: app.addUrl(result, [ 'image', 'profile' ])
-			}
+				pagination: await apis.Paginations(
+					'products',
+					condition,
+					offset,
+					limit
+				),
+				result: app.addUrl(result, ['image', 'profile']),
+			},
 		};
 	},
 
 	addProduct: async (Request) => {
 		const required = {
 			name: Request.body.name,
-			flavour: Request.body.flavour,
+			category_id: Request.body.category_id,
+			sub_category_id: Request.body.sub_category_id || 0,
 			price: Request.body.price,
 			stock: Request.body.stock,
 			description: Request.body.description,
-			hookah_type: Request.body.hookah_type,
 			user_id: Request.body.user_id,
-			is_request: 1
+			is_feature: 1,
 		};
 		const requestData = await apis.vaildation(required, {});
 		if (Request.files && Request.files.image) {
@@ -65,24 +70,25 @@ module.exports = {
 		requestData.id = await DB.save('products', requestData);
 		return {
 			message: 'Product add successfully',
-			data: requestData
+			data: requestData,
 		};
 	},
 	productDetails: async (Request) => {
 		const product_id = Request.params.product_id;
 		const product_info = await DB.find('products', 'first', {
 			conditions: {
-				'products.id': product_id
+				'products.id': product_id,
 			},
-			join: [ 'users on (users.id = products.user_id)' ],
+			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
 				'users.name as shop_name',
 				'users.address',
 				'users.profile',
 				'users.service_fees',
-				'users.taxes'
-			]
+				'users.delivery_charges',
+				'users.taxes',
+			],
 		});
 		if (!product_info) throw new ApiError('Invaild Product id', 400);
 		if (product_info.image) {
@@ -93,28 +99,28 @@ module.exports = {
 		}
 		return {
 			message: 'Product detail',
-			data: product_info
+			data: product_info,
 		};
 	},
 	updateProduct: async (Request) => {
 		const required = {
-			product_id: Request.body.product_id
+			product_id: Request.body.product_id,
 		};
 		const nonRequired = {
 			name: Request.body.name,
-			flavour: Request.body.flavour,
+			category_id: Request.body.category_id,
 			price: Request.body.price,
 			stock: Request.body.stock,
 			description: Request.body.description,
-			hookah_type: Request.body.hookah_type,
-			user_id: Request.body.user_id
+			is_feature: Request.body.is_feature,
+			user_id: Request.body.user_id,
 		};
 		const requestData = await apis.vaildation(required, nonRequired);
 		const product_info = await DB.find('products', 'first', {
 			conditions: {
 				user_id: requestData.user_id,
-				id: requestData.product_id
-			}
+				id: requestData.product_id,
+			},
 		});
 		if (!product_info) throw new ApiError('Invaild Product id', 400);
 		requestData.id = requestData.product_id;
@@ -124,47 +130,47 @@ module.exports = {
 		requestData.id = await DB.save('products', requestData);
 		return {
 			message: 'Product update successfully',
-			data: requestData
+			data: requestData,
 		};
 	},
 	deleteProduct: async (Request) => {
 		const required = {
 			product_id: Request.body.product_id,
-			user_id: Request.body.user_id
+			user_id: Request.body.user_id,
 		};
 		const requestData = await apis.vaildation(required, {});
 		const product_info = await DB.find('products', 'first', {
 			conditions: {
 				user_id: requestData.user_id,
-				id: requestData.product_id
-			}
+				id: requestData.product_id,
+			},
 		});
 		if (!product_info) throw new ApiError('Invaild Product id', 400);
 		await DB.first(`delete from products where id = ${requestData.product_id}`);
 		return {
 			message: 'Product delete successfully',
-			data: []
+			data: [],
 		};
 	},
 	OrderAccept: async (Request) => {
 		const required = {
 			order_id: Request.body.order_id,
 			shop_id: Request.body.user_id,
-			order_status: Request.body.order_status
+			order_status: Request.body.order_status,
 		};
 		const requestData = await apis.vaildation(required, {});
 		const order_info = await DB.find('orders', 'first', {
 			conditions: {
 				shop_id: requestData.shop_id,
-				id: requestData.order_id
-			}
+				id: requestData.order_id,
+			},
 		});
 		if (!order_info) throw new ApiError('Invaild Order id', 400);
 		const { order_id, shop_id, order_status } = requestData;
 		let message = 'Order Accepted Successfully';
 		let pushMessage = `order accepted by shop`;
 		const updateOrderStatus = {
-			id: order_id
+			id: order_id,
 		};
 		const data = {};
 		if (parseInt(order_status) === 1) {
@@ -179,7 +185,7 @@ module.exports = {
 			updateOrderStatus.driver_info = JSON.stringify(driver);
 			DB.save('users', {
 				id: driver.id,
-				is_free: 0
+				is_free: 0,
 			});
 			data.driver_info = driver;
 			data.order_info = order_info;
@@ -193,21 +199,21 @@ module.exports = {
 			apis.sendPush(order_info.user_id, {
 				message: pushMessage,
 				data: order_info,
-				notification_code: 3
+				notification_code: 3,
 			});
 			if (requestData.driver_id) {
 				apis.sendPush(requestData.driver_id, {
 					message: `you have new order to deliver`,
 					data: order_info,
-					notification_code: 4
+					notification_code: 4,
 				});
 			}
 		}, 100);
 		return {
 			message,
-			data
+			data,
 		};
-	}
+	},
 };
 
 const findDriver = async (latitude, longitude) => {
