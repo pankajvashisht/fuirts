@@ -33,11 +33,13 @@ class UserController extends ApiController {
 			}
 			this.mails(RequestData);
 		}, 100);
+		const usersInfo = await super.userDetails(user_id);
+		if (usersInfo.profile.length > 0) {
+			usersInfo.profile = appURL + 'uploads/' + usersInfo.profile;
+		}
 		return {
 			message: app.Message('signup'),
-			data: {
-				authorization_key: RequestData.authorization_key,
-			},
+			data: usersInfo,
 		};
 	}
 	async verifyOtp(req) {
