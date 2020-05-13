@@ -1,6 +1,13 @@
 module.exports = {
 	en: {
+		InvaildOrder: 'Invalid order id',
+		productUpdate: 'Product updated successfully',
+		productDetail: 'Product details',
+		ProductListing: 'Product listing',
+		imageRequired: 'Image field required',
+		productInvaild: 'Invalid Product id',
 		defualtAdress: 'Default address details',
+		productAdd: 'Product added successfully',
 		addressList: 'Address listing',
 		addressDetails: 'Address details',
 		updateAddress: 'Address updated successfully',
@@ -83,6 +90,13 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		InvaildOrder: 'Identifiant de commande non valide',
+		productUpdate: `Produit mis à jour avec succès`,
+		productDetail: `Détails du produit`,
+		ProductListing: 'Liste des produits',
+		imageRequired: `Champ d'image requis`,
+		productAdd: 'Produit ajouté avec succès',
+		productInvaild: 'Identifiant de produit non valide',
 		addressList: `Liste d'adresses`,
 		defualtAdress: `Détails de l'adresse par défaut`,
 		addressDetails: `Détails de l'adresse`,

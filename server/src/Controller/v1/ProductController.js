@@ -37,7 +37,7 @@ module.exports = {
 		}
 		const result = await DB.find('products', 'all', condition);
 		return {
-			message: 'products list',
+			message: app.Message('ProductListing'),
 			data: {
 				pagination: await apis.Paginations(
 					'products',
@@ -65,11 +65,11 @@ module.exports = {
 		if (Request.files && Request.files.image) {
 			requestData.image = await app.upload_pic_with_await(Request.files.image);
 		} else {
-			throw new ApiError('image field is required', 422);
+			throw new ApiError(app.Message('imageRequired'), 422);
 		}
 		requestData.id = await DB.save('products', requestData);
 		return {
-			message: 'Product add successfully',
+			message: app.Message('productAdd'),
 			data: requestData,
 		};
 	},
@@ -90,7 +90,7 @@ module.exports = {
 				'users.taxes',
 			],
 		});
-		if (!product_info) throw new ApiError('Invaild Product id', 400);
+		if (!product_info) throw new ApiError(app.Message('productInvaild'), 400);
 		if (product_info.image) {
 			product_info.image = app.ImageUrl(product_info.image);
 		}
@@ -98,7 +98,7 @@ module.exports = {
 			product_info.profile = app.ImageUrl(product_info.profile);
 		}
 		return {
-			message: 'Product detail',
+			message: app.Message('productDetail'),
 			data: product_info,
 		};
 	},
@@ -122,14 +122,14 @@ module.exports = {
 				id: requestData.product_id,
 			},
 		});
-		if (!product_info) throw new ApiError('Invaild Product id', 400);
+		if (!product_info) throw new ApiError(app.Message('productInvaild'), 400);
 		requestData.id = requestData.product_id;
 		if (Request.files && Request.files.image) {
 			requestData.image = await app.upload_pic_with_await(Request.files.image);
 		}
 		requestData.id = await DB.save('products', requestData);
 		return {
-			message: 'Product update successfully',
+			message: app.Message('productUpdate'),
 			data: requestData,
 		};
 	},
@@ -145,11 +145,11 @@ module.exports = {
 				id: requestData.product_id,
 			},
 		});
-		if (!product_info) throw new ApiError('Invaild Product id', 400);
+		if (!product_info) throw new ApiError(app.Message('productInvaild'), 400);
 		await DB.first(`delete from products where id = ${requestData.product_id}`);
 		return {
 			message: 'Product delete successfully',
-			data: [],
+			status: 204,
 		};
 	},
 	OrderAccept: async (Request) => {
@@ -165,8 +165,8 @@ module.exports = {
 				id: requestData.order_id,
 			},
 		});
-		if (!order_info) throw new ApiError('Invaild Order id', 400);
-		const { order_id, shop_id, order_status } = requestData;
+		if (!order_info) throw new ApiError(app.Message('InvaildOrder'), 400);
+		const { order_id, order_status } = requestData;
 		let message = 'Order Accepted Successfully';
 		let pushMessage = `order accepted by shop`;
 		const updateOrderStatus = {
@@ -174,21 +174,21 @@ module.exports = {
 		};
 		const data = {};
 		if (parseInt(order_status) === 1) {
-			const { latitude, longitude } = Request.body.userInfo;
-			const driver = await findDriver(latitude, longitude);
-			if (!driver) throw new ApiError('No Driver Found', 400);
+			//const { latitude, longitude } = Request.body.userInfo;
+			// const driver = await findDriver(latitude, longitude);
+			// if (!driver) throw new ApiError('No Driver Found', 400);
 			updateOrderStatus.order_status = 1;
-			updateOrderStatus.driver_id = driver.id;
-			if (driver.profile) {
-				driver.profile = appURL + 'uploads/' + driver.profile;
-			}
-			updateOrderStatus.driver_info = JSON.stringify(driver);
-			DB.save('users', {
-				id: driver.id,
-				is_free: 0,
-			});
-			data.driver_info = driver;
-			data.order_info = order_info;
+			//updateOrderStatus.driver_id = driver.id;
+			// if (driver.profile) {
+			// 	driver.profile = appURL + 'uploads/' + driver.profile;
+			// }
+			// updateOrderStatus.driver_info = JSON.stringify(driver);
+			// DB.save('users', {
+			// 	id: driver.id,
+			// 	is_free: 0,
+			// });
+			// data.driver_info = driver;
+			// data.order_info = order_info;
 		} else {
 			updateOrderStatus.order_status = 2;
 			pushMessage = `order rejected by shop`;
