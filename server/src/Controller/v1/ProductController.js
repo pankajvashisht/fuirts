@@ -59,9 +59,16 @@ module.exports = {
 			stock: Request.body.stock,
 			description: Request.body.description,
 			user_id: Request.body.user_id,
-			is_feature: 1,
+			is_feature: Request.body.is_feature || 0,
 		};
 		const requestData = await apis.vaildation(required, {});
+		const categoryInfo = await DB.find('categories', 'first', {
+			conditions: {
+				id: requestData.category_id,
+				status: 1,
+			},
+		});
+		if (!categoryInfo) throw new ApiError(app.Message('categoryNotFound'), 400);
 		if (Request.files && Request.files.image) {
 			requestData.image = await app.upload_pic_with_await(Request.files.image);
 		} else {
