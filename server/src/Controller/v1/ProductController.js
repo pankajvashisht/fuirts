@@ -19,7 +19,7 @@ module.exports = {
 			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
-				'users.name as shop_name',
+				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
 				'users.profile',
 				'users.service_fees',
@@ -82,7 +82,7 @@ module.exports = {
 			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
-				'users.name as shop_name',
+				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
 				'users.profile',
 				'users.service_fees',
