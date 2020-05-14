@@ -15,6 +15,7 @@ module.exports = {
 			search = '',
 			newShop = false,
 			highRated = false,
+			category_id = 0,
 		} = Request.query;
 		offset = (offset - 1) * limit;
 		const condition = {
@@ -56,6 +57,13 @@ module.exports = {
 		if (highRated) {
 			condition['orderBy'] = ['rating desc'];
 		}
+		if (parseInt(category_id) !== 0) {
+			condition.conditions['subquery'] = [
+				`select count(id) from products where category_id=${category_id} and user_id=users.id`,
+				'>',
+				0,
+			];
+		}
 		if (search) {
 			condition.conditions[`like`] = {
 				first_name: search,
@@ -83,10 +91,9 @@ module.exports = {
 			join: ['users on (ratings.user_id = users.id)'],
 			fields: [
 				'ratings.*',
-				'name',
+				'first_name',
+				'last_name',
 				'status',
-				'is_free',
-				'is_online',
 				'email',
 				'phone',
 				'phone_code',
@@ -105,36 +112,38 @@ module.exports = {
 		const required = {
 			user_id: Request.body.user_id,
 			product_id: Request.body.product_id,
+			address_id: Request.body.address_id,
 			quantity: Request.body.quantity || 1,
 			service_fees: Request.body.service_fees || 0,
 			taxes: Request.body.taxes || 0,
 			order_date: Request.body.order_date || app.currentTime,
-			address: Request.body.address || '',
-			latitude: Request.body.latitude || 0,
-			longitude: Request.body.longitude || 0,
-			appartment_street_number: Request.body.appartment_street_number || '',
+			discout: Request.body.discout || 0,
+			coupon_id: Request.body.coupon_id || 0,
 			status: 1,
 		};
 		const RequestData = await apis.vaildation(required, {});
+		const { product_id, address_id, user_id } = RequestData;
 		const product = await DB.find('products', 'first', {
 			conditions: {
-				id: RequestData.product_id,
+				id: product_id,
 			},
 		});
-		if (!product) throw new ApiError('Invaild product id', 422);
+		if (!product) throw new ApiError(app.Message('productInvaild'), 422);
+		const addressDetails = await DB.find('user_addresses', 'first', {
+			conditions: {
+				id: address_id,
+				user_id,
+			},
+		});
+		if (!addressDetails) throw new ApiError(app.Message('productInvaild'), 422);
 		RequestData.shop_id = product.user_id;
 		if (product.stock === 0 && product.stock < RequestData.quantity)
-			throw new ApiError('Product out of stocks', 422);
+			throw new ApiError(app.Message('stockError'), 422);
 		RequestData.product_details = JSON.stringify(product);
 		RequestData.price = product.price * RequestData.quantity;
 		product.stock -= RequestData.quantity;
 		DB.save('products', product);
-		RequestData.address_details = JSON.stringify({
-			address: RequestData.address,
-			latitude: RequestData.latitude,
-			longitude: RequestData.longitude,
-			appartment_street_number: RequestData.appartment_street_number,
-		});
+		RequestData.address_details = JSON.stringify(addressDetails);
 		RequestData.order_id = await DB.save('orders', RequestData);
 		product.order_id = RequestData.order_id;
 		setTimeout(() => {
@@ -145,7 +154,7 @@ module.exports = {
 			});
 		}, 100);
 		return {
-			message: 'Order add Successfully',
+			message: app.Message('orderSuccess'),
 			data: RequestData,
 		};
 	},
@@ -185,7 +194,7 @@ module.exports = {
 			},
 		};
 		const result = await DB.find('users', 'first', condition);
-		if (!result) throw new ApiError('Invaild shop id', 422);
+		if (!result) throw new ApiError(app.Message('invaildShop'), 422);
 		RequestData.rating_id = await DB.save('ratings', RequestData);
 		setTimeout(() => {
 			apis.sendPush(RequestData.shop_id, {
@@ -195,7 +204,7 @@ module.exports = {
 			});
 		}, 100);
 		return {
-			message: 'Rating Successfully',
+			message: app.Message('ratingSuccess'),
 			data: RequestData,
 		};
 	},
@@ -307,7 +316,7 @@ module.exports = {
 				'users.longitude',
 				'users.profile',
 				'shop.accept_order',
-				'shops.first_name as shop_name',
+				'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
 				'shops.email as shop_email',
 				'shops.phone as shop_phone',
 				'shops.phone_code as shop_phone_code',
@@ -329,7 +338,7 @@ module.exports = {
 			return value;
 		});
 		return {
-			message: 'My orders',
+			message: app.Message('orderListing'),
 			data: {
 				pagination: await apis.Paginations('orders', condition, offset, limit),
 				result: app.addUrl(final, ['profile', 'shop_profile']),
@@ -366,7 +375,7 @@ module.exports = {
 				'users.latitude',
 				'users.longitude',
 				'users.profile',
-				'shops.name as shop_name',
+				'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
 				'shops.email as shop_email',
 				'shops.phone as shop_phone',
 				'shops.phone_code as shop_phone_code',
@@ -389,7 +398,7 @@ module.exports = {
 			return value;
 		});
 		return {
-			message: 'orders Details',
+			message: app.Message('orderDetail'),
 			data: app.addUrl(final, ['profile', 'shop_profile'])[0],
 		};
 	},

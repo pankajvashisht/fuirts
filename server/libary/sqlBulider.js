@@ -80,6 +80,14 @@ class Query {
 							}
 							its_first++;
 						}
+					} else if (c === 'subquery') {
+						const a = condition.conditions[c];
+						if (its_first === 0) {
+							query += ` (${a[0]}) ${a[1]} ${a[2]} `;
+						} else {
+							query += ` and (${a[0]}) ${a[1]} ${a[2]} `;
+						}
+						its_first++;
 					} else if (c === 'like') {
 						let likeCount = 0;
 						for (let a in condition.conditions[c]) {

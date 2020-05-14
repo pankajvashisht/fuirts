@@ -1,5 +1,11 @@
 module.exports = {
 	en: {
+		ratingSuccess: 'Rating Successfully to shop',
+		orderDetail: 'order details',
+		orderListing: 'my order listing',
+		invaildShop: 'Invaild shop id',
+		orderSuccess: 'Order successfully place',
+		stockError: 'Product out of stock',
 		home: 'Home results',
 		InvaildOrder: 'Invalid order id',
 		productUpdate: 'Product updated successfully',
@@ -91,6 +97,12 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		ratingSuccess: 'Évaluation réussie pour acheter',
+		orderDetail: 'détails de la commande',
+		orderListing: 'ma liste de commande',
+		invaildShop: 'Identifiant de boutique non valide',
+		orderSuccess: 'Commande passée avec succès',
+		stockError: 'Produit en rupture de stock',
 		home: `Résultats à domicile`,
 		InvaildOrder: 'Identifiant de commande non valide',
 		productUpdate: `Produit mis à jour avec succès`,
