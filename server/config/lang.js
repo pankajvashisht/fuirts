@@ -1,5 +1,6 @@
 module.exports = {
 	en: {
+		home: 'Home results',
 		InvaildOrder: 'Invalid order id',
 		productUpdate: 'Product updated successfully',
 		productDetail: 'Product details',
@@ -90,6 +91,7 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		home: `Résultats à domicile`,
 		InvaildOrder: 'Identifiant de commande non valide',
 		productUpdate: `Produit mis à jour avec succès`,
 		productDetail: `Détails du produit`,

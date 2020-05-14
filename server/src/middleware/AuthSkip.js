@@ -15,6 +15,7 @@ const skipRoutes = {
 	gifts: 'GET',
 	product: 'GET',
 	rating: 'GET',
+	home: 'GET',
 };
 const AuthSkip = (Req, res, next) => {
 	res.auth = true;

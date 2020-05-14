@@ -41,6 +41,9 @@ module.exports = {
 				'user_type',
 				'latitude',
 				'longitude',
+				'service_fees',
+				'delivery_charges',
+				'taxes',
 				`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
 				`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
 			],
@@ -194,6 +197,73 @@ module.exports = {
 		return {
 			message: 'Rating Successfully',
 			data: RequestData,
+		};
+	},
+	home: async (Request) => {
+		const { latitude = 0, longitude = 0, search = '' } = Request.query;
+		const banners = await DB.find('banners', 'all', {
+			conditions: {
+				status: 1,
+			},
+			limit: 10,
+		});
+		const categories = await DB.find('categories', 'all', {
+			conditions: {
+				status: 1,
+			},
+			limit: 10,
+		});
+		const condition = {
+			conditions: {
+				user_type: 2,
+				status: 1,
+				location: [
+					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < 20`,
+				],
+			},
+			fields: [
+				'id',
+				'first_name',
+				'last_name',
+				'accept_order',
+				'status',
+				'is_free',
+				'is_online',
+				'email',
+				'phone',
+				'phone_code',
+				'profile',
+				'address',
+				'user_type',
+				'latitude',
+				'longitude',
+				'service_fees',
+				'delivery_charges',
+				'taxes',
+				`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
+				`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
+			],
+			limit: 10,
+			orderBy: ['id desc'],
+		};
+		if (search) {
+			condition.conditions[`like`] = {
+				first_name: search,
+				last_name: search,
+			};
+		}
+		const newConditions = { ...condition };
+		const newShop = await DB.find('users', 'all', condition);
+		newConditions['orderBy'] = ['rating desc'];
+		const topRated = await DB.find('users', 'all', newConditions);
+		return {
+			message: app.Message('home'),
+			data: {
+				banners: app.addUrl(banners, 'image'),
+				categories: app.addUrl(categories, 'image'),
+				topRatedShops: app.addUrl(topRated, 'profile'),
+				newShops: app.addUrl(newShop, 'profile'),
+			},
 		};
 	},
 	myOrders: async (Request) => {
