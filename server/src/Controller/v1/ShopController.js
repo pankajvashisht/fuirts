@@ -75,7 +75,7 @@ module.exports = {
 			message: app.Message('shopListing'),
 			data: {
 				pagination: await apis.Paginations('users', condition, offset, limit),
-				result: app.addUrl(result, 'image'),
+				result: app.addUrl(result, 'profile'),
 			},
 		};
 	},
