@@ -10,6 +10,7 @@ module.exports = {
 		let offset = Request.query.offset || 1;
 		const { limit = 10, search = '', shop_id, is_feature = '' } = Request.query;
 		const user_id = shop_id || Request.body.user_id;
+		const loginId = Request.body.user_id || 0;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
@@ -19,6 +20,7 @@ module.exports = {
 			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
+				`(select count(id) from favourite_products where user_id=${loginId} and product_id=products.id) as is_fav`,
 				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
 				'users.profile',
@@ -68,6 +70,7 @@ module.exports = {
 			],
 			fields: [
 				'products.*',
+				'1 as is_fav',
 				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
 				'users.profile',
@@ -133,6 +136,7 @@ module.exports = {
 		let offset = Request.query.offset || 1;
 		const { limit = 20, search = '', is_feature = '' } = Request.query;
 		const { shop_id } = Request.params;
+		const loginId = Request.body.user_id || 0;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
@@ -142,6 +146,7 @@ module.exports = {
 			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
+				`(select count(id) from favourite_products where user_id=${loginId} and product_id=products.id) as is_fav`,
 				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
 				'users.profile',
@@ -215,6 +220,7 @@ module.exports = {
 	},
 	productDetails: async (Request) => {
 		const product_id = Request.params.product_id;
+		const loginId = Request.body.user_id || 0;
 		const product_info = await DB.find('products', 'first', {
 			conditions: {
 				'products.id': product_id,
@@ -222,6 +228,7 @@ module.exports = {
 			join: ['users on (users.id = products.user_id)'],
 			fields: [
 				'products.*',
+				`(select count(id) from favourite_products where user_id=${loginId} and product_id=products.id) as is_fav`,
 				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
 				'users.profile',
