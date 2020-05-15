@@ -288,6 +288,32 @@ module.exports = {
 			},
 		};
 	},
+	repeatOrder: async (Request) => {
+		const required = {
+			user_id: Request.body.user_id,
+			order_id: Request.body.order_id,
+		};
+		const RequestData = await apis.vaildation(required, {});
+		const { order_id, user_id } = RequestData;
+		const orderInfo = await DB.find('orders', 'first', {
+			conditions: {
+				id: order_id,
+				user_id,
+			},
+		});
+		if (!orderInfo) throw new ApiError(app.Message('invaildOrder'), 400);
+		delete orderInfo.id;
+		delete orderInfo.coupon_id;
+		delete orderInfo.coupon_details;
+		orderInfo.order_date = app.currentTime;
+		orderInfo.created = app.currentTime;
+		orderInfo.modified = app.currentTime;
+		orderInfo.order_id = await DB.save('orders', orderInfo);
+		return {
+			message: app.Message('orderSuccess'),
+			data: orderInfo,
+		};
+	},
 	myOrders: async (Request) => {
 		const user_id = Request.body.user_id;
 		const user_type = Request.body.userInfo.user_type;
@@ -401,7 +427,7 @@ module.exports = {
 			orderBy: ['orders.id desc'],
 		};
 		const result = await DB.find('orders', 'all', condition);
-		if (result.length === 0) throw new ApiError('Invaild order id', 403);
+		if (result.length === 0) throw new ApiError('invaildOrder', 403);
 		const final = result.map((value) => {
 			if (value.product_details) {
 				value.product_details = JSON.parse(value.product_details);

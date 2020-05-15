@@ -35,6 +35,7 @@ router.get('/app-information', Apiresponse(user.appInfo));
 router.get('/shop/listing', Apiresponse(ShopController.getShop));
 router.post('/order', Apiresponse(ShopController.orderFurit));
 router.get('/order', Apiresponse(ShopController.myOrders));
+router.post('/order/repeat', Apiresponse(ShopController.repeatOrder));
 router.get(
 	'/application/category',
 	Apiresponse(CategoryController.appCategory)
