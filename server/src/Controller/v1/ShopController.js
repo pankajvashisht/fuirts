@@ -162,7 +162,7 @@ module.exports = {
 		setTimeout(() => {
 			apis.sendPush(RequestData.shop_id, {
 				message: 'You have new order',
-				data: product,
+				data: productDetails,
 				notification_code: 1,
 			});
 		}, 100);
@@ -439,6 +439,9 @@ const checkAllProducts = async (product_id, quantity) => {
 		(value.totalPrice = quantityArray[key] * value.price),
 			(value.qyt = quantityArray[key]);
 		price += value.totalPrice;
+		if (value.image.length > 0) {
+			value.image = app.ImageUrl(value.image);
+		}
 		totalQyt += parseInt(quantityArray[key]);
 		return value;
 	});
