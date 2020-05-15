@@ -87,7 +87,7 @@ module.exports = {
 		}
 		const result = await DB.find('products', 'all', condition);
 		const newConditions = { ...condition };
-		newConditions.conditions[`is_feature`] = is_feature;
+		newConditions.conditions[`is_feature`] = 1;
 		newConditions.limit = 10;
 		const feature = await DB.find('products', 'all', newConditions);
 		return {
