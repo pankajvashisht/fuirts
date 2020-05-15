@@ -8,7 +8,7 @@ let DB = new Db();
 module.exports = {
 	getProduct: async (Request) => {
 		let offset = Request.query.offset || 1;
-		const { limit = 10, search = '', shop_id } = Request.query;
+		const { limit = 10, search = '', shop_id, is_feature = '' } = Request.query;
 		const user_id = shop_id || Request.body.user_id;
 		offset = (offset - 1) * limit;
 		const condition = {
@@ -34,6 +34,9 @@ module.exports = {
 				name: search,
 				description: search,
 			};
+		}
+		if (is_feature) {
+			condition.conditions[`is_feature`] = is_feature;
 		}
 		const result = await DB.find('products', 'all', condition);
 		return {
