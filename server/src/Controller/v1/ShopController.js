@@ -434,7 +434,7 @@ const checkAllProducts = async (product_id, quantity) => {
 	let price = 0;
 	let totalQyt = 0;
 	const productQyt = products.map((value, key) => {
-		if (value.stock === 0 && value.stock < quantityArray[key])
+		if (value.stock === 0 && value.stock < parseInt(quantityArray[key]))
 			throw new ApiError(app.Message('stockError'), 422);
 		(value.totalPrice = quantityArray[key] * value.price),
 			(value.qyt = quantityArray[key]);
