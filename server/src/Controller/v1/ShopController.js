@@ -434,15 +434,15 @@ const checkAllProducts = async (product_id, quantity) => {
 	let price = 0;
 	let totalQyt = 0;
 	const productQyt = products.map((value, key) => {
-		if (value.stock === 0 && value.stock < parseInt(quantityArray[key]))
+		const qyt = parseInt(quantityArray[key]);
+		if (value.stock === 0 && value.stock < qyt)
 			throw new ApiError(app.Message('stockError'), 422);
-		(value.totalPrice = quantityArray[key] * value.price),
-			(value.qyt = quantityArray[key]);
+		(value.totalPrice = qyt * value.price), (value.qyt = qyt);
 		price += value.totalPrice;
 		if (value.image.length > 0) {
 			value.image = app.ImageUrl(value.image);
 		}
-		totalQyt += parseInt(quantityArray[key]);
+		totalQyt += qyt;
 		return value;
 	});
 	return [productQyt, price, totalQyt];
