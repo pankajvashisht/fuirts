@@ -328,7 +328,7 @@ module.exports = {
 				'users.latitude',
 				'users.longitude',
 				'users.profile',
-				'shop.accept_order',
+				'shops.accept_order',
 				'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
 				'shops.email as shop_email',
 				'shops.phone as shop_phone',
