@@ -53,6 +53,60 @@ module.exports = {
 		};
 	},
 
+	shopProduct: async (Request) => {
+		let offset = Request.query.offset || 1;
+		const { limit = 20, search = '', shop_id, is_feature = '' } = Request.query;
+		const { shop_id } = Request.params;
+		offset = (offset - 1) * limit;
+		const condition = {
+			conditions: {
+				'products.status': 1,
+				user_id: shop_id,
+			},
+			join: ['users on (users.id = products.user_id)'],
+			fields: [
+				'products.*',
+				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
+				'users.address',
+				'users.profile',
+				'users.service_fees',
+				'users.delivery_charges',
+				'users.taxes',
+			],
+			limit: [offset, limit],
+			orderBy: ['id desc'],
+		};
+		if (search) {
+			condition.conditions[`like`] = {
+				name: search,
+				description: search,
+			};
+		}
+		if (is_feature) {
+			condition.conditions[`is_feature`] = is_feature;
+		}
+		const result = await DB.find('products', 'all', condition);
+		const newConditions = { ...condition };
+		newConditions.conditions[`is_feature`] = is_feature;
+		newConditions.limit = 10;
+		const feature = await DB.find('products', 'all', newConditions);
+		return {
+			message: app.Message('ProductListing'),
+			data: {
+				pagination: await apis.Paginations(
+					'products',
+					condition,
+					offset,
+					limit
+				),
+				result: {
+					featureProduct: app.addUrl(feature, ['image', 'profile']),
+					products: app.addUrl(result, ['image', 'profile']),
+				},
+			},
+		};
+	},
+
 	addProduct: async (Request) => {
 		const required = {
 			name: Request.body.name,

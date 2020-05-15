@@ -64,6 +64,10 @@ router.get(
 	'/product/:product_id([0-9]+)',
 	Apiresponse(ProductController.productDetails)
 );
+router.get(
+	'/shop/product/:shop_id([0-9]+)',
+	Apiresponse(ProductController.shopProduct)
+);
 router
 	.route('/products')
 	.get(Apiresponse(ProductController.getProduct))
