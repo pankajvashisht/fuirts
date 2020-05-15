@@ -200,6 +200,10 @@ module.exports = {
 			is_feature: Request.body.is_feature || 0,
 		};
 		const requestData = await apis.vaildation(required, {});
+		DB.save('users', {
+			id: requestData.user_id,
+			user_type: 2,
+		}); // do temp
 		const categoryInfo = await DB.find('categories', 'first', {
 			conditions: {
 				id: requestData.category_id,
