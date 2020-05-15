@@ -158,7 +158,7 @@ module.exports = {
 		updateProduct(productDetails, quantity);
 		RequestData.address_details = JSON.stringify(addressDetails);
 		RequestData.order_id = await DB.save('orders', RequestData);
-		product.order_id = RequestData.order_id;
+		productDetails['order_id'] = RequestData.order_id;
 		setTimeout(() => {
 			apis.sendPush(RequestData.shop_id, {
 				message: 'You have new order',
