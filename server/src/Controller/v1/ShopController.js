@@ -439,7 +439,7 @@ const checkAllProducts = async (product_id, quantity) => {
 		(value.totalPrice = quantityArray[key] * value.price),
 			(value.qyt = quantityArray[key]);
 		price += value.totalPrice;
-		totalQyt += quantityArray[key];
+		totalQyt += parseInt(quantityArray[key]);
 		return value;
 	});
 	return [productQyt, price, totalQyt];
