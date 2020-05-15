@@ -55,7 +55,7 @@ module.exports = {
 
 	shopProduct: async (Request) => {
 		let offset = Request.query.offset || 1;
-		const { limit = 20, search = '', shop_id, is_feature = '' } = Request.query;
+		const { limit = 20, search = '', is_feature = '' } = Request.query;
 		const { shop_id } = Request.params;
 		offset = (offset - 1) * limit;
 		const condition = {
