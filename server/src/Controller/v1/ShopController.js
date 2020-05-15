@@ -122,13 +122,17 @@ module.exports = {
 			status: 1,
 		};
 		const RequestData = await apis.vaildation(required, {});
-		const { product_id, address_id, user_id, coupon_id } = RequestData;
-		const product = await DB.find('products', 'first', {
-			conditions: {
-				id: product_id,
-			},
-		});
-		if (!product) throw new ApiError(app.Message('productInvaild'), 422);
+		const {
+			product_id,
+			address_id,
+			user_id,
+			coupon_id,
+			quantity,
+		} = RequestData;
+		const [productDetails, price, totalQyt] = await checkAllProducts(
+			product_id,
+			quantity
+		);
 		const addressDetails = await DB.find('user_addresses', 'first', {
 			conditions: {
 				id: address_id,
@@ -147,13 +151,11 @@ module.exports = {
 		}
 
 		if (!addressDetails) throw new ApiError(app.Message('productInvaild'), 422);
-		RequestData.shop_id = product.user_id;
-		if (product.stock === 0 && product.stock < RequestData.quantity)
-			throw new ApiError(app.Message('stockError'), 422);
-		RequestData.product_details = JSON.stringify(product);
-		RequestData.price = product.price * RequestData.quantity;
-		product.stock -= RequestData.quantity;
-		DB.save('products', product);
+		RequestData.shop_id = productDetails[0].user_id;
+		RequestData.product_details = JSON.stringify(productDetails);
+		RequestData.price = price;
+		RequestData.quantity = totalQyt;
+		updateProduct(productDetails, quantity);
 		RequestData.address_details = JSON.stringify(addressDetails);
 		RequestData.order_id = await DB.save('orders', RequestData);
 		product.order_id = RequestData.order_id;
@@ -413,4 +415,42 @@ module.exports = {
 			data: app.addUrl(final, ['profile', 'shop_profile'])[0],
 		};
 	},
+};
+
+const checkAllProducts = async (product_id, quantity) => {
+	const quantityArray = quantity.split(',');
+	const products = await DB.find('products', 'all', {
+		conditions: {
+			status: 1,
+			IN: {
+				id: product_id,
+			},
+		},
+	});
+	const totalProdict = product_id.split(',');
+	if (products.length !== totalProdict.length) {
+		throw new ApiError(app.Message('productInvaild'), 422);
+	}
+	let price = 0;
+	let totalQyt = 0;
+	const productQyt = products.map((value, key) => {
+		if (value.stock === 0 && value.stock < quantityArray[key])
+			throw new ApiError(app.Message('stockError'), 422);
+		(value.totalPrice = quantityArray[key] * value.price),
+			(value.qyt = quantityArray[key]);
+		price += value.totalPrice;
+		totalQyt += quantityArray[key];
+		return value;
+	});
+	return [productQyt, price, totalQyt];
+};
+
+const updateProduct = async (product, qyt) => {
+	const totalQty = qyt.split(',');
+	product.forEach((value, key) => {
+		DB.save('products', {
+			id: value.id,
+			stock: value.stock - totalQty[key],
+		});
+	});
 };
