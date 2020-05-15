@@ -122,7 +122,7 @@ module.exports = {
 			status: 1,
 		};
 		const RequestData = await apis.vaildation(required, {});
-		const { product_id, address_id, user_id } = RequestData;
+		const { product_id, address_id, user_id, coupon_id } = RequestData;
 		const product = await DB.find('products', 'first', {
 			conditions: {
 				id: product_id,
@@ -135,6 +135,17 @@ module.exports = {
 				user_id,
 			},
 		});
+		if (parseInt(coupon_id) === 0) {
+			const couponDetails = await DB.find('coupons', 'first', {
+				conditions: {
+					id: coupon_id,
+					status: 1,
+				},
+			});
+			if (!couponDetails) throw new ApiError(app.Message('coupenInvaild'), 422);
+			RequestData.coupon_details = JSON.stringify(couponDetails);
+		}
+
 		if (!addressDetails) throw new ApiError(app.Message('productInvaild'), 422);
 		RequestData.shop_id = product.user_id;
 		if (product.stock === 0 && product.stock < RequestData.quantity)

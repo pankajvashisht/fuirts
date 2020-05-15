@@ -1,5 +1,6 @@
 module.exports = {
 	en: {
+		coupenInvaild: 'Coupen invaild',
 		ratingSuccess: 'Rating Successfully to shop',
 		orderDetail: 'order details',
 		orderListing: 'my order listing',
@@ -97,6 +98,7 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		coupenInvaild: 'Coupen invaild',
 		ratingSuccess: 'Évaluation réussie pour acheter',
 		orderDetail: 'détails de la commande',
 		orderListing: 'ma liste de commande',
