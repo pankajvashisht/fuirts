@@ -87,12 +87,12 @@ module.exports = {
 				description: search,
 			};
 		}
-		const result = await DB.find('products', 'all', condition);
+		const result = await DB.find('favourite_products', 'all', condition);
 		return {
 			message: app.Message('ProductListing'),
 			data: {
 				pagination: await apis.Paginations(
-					'products',
+					'favourite_products',
 					condition,
 					offset,
 					limit
