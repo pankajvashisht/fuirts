@@ -139,7 +139,7 @@ module.exports = {
 				user_id,
 			},
 		});
-		if (parseInt(coupon_id) === 0) {
+		if (parseInt(coupon_id) !== 0) {
 			const couponDetails = await DB.find('coupons', 'first', {
 				conditions: {
 					id: coupon_id,
