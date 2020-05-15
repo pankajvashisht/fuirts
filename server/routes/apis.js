@@ -92,5 +92,10 @@ router
 	.route('/rating')
 	.get(Apiresponse(ShopController.getReview))
 	.post(Apiresponse(ShopController.giveRating));
+router
+	.route('/products/favourite')
+	.get(Apiresponse(ProductController.favoriteProducts))
+	.post(Apiresponse(ProductController.doFavourite))
+	.delete(Apiresponse(ProductController.doFavourite));
 
 module.exports = router;

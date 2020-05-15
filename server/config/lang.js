@@ -1,5 +1,7 @@
 module.exports = {
 	en: {
+		unFavSuccess: 'Product remove from favourite list',
+		favSuccess: 'Product add in favourite list',
 		coupenInvaild: 'Coupen invaild',
 		ratingSuccess: 'Rating Successfully to shop',
 		orderDetail: 'order details',
@@ -98,6 +100,8 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		unFavSuccess: 'Produit retiré de la liste des favoris',
+		favSuccess: 'Produit ajouté à la liste des favoris',
 		coupenInvaild: 'Coupen invaild',
 		ratingSuccess: 'Évaluation réussie pour acheter',
 		orderDetail: 'détails de la commande',

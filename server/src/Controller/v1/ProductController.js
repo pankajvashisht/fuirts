@@ -52,7 +52,83 @@ module.exports = {
 			},
 		};
 	},
-
+	favoriteProducts: async (Request) => {
+		let offset = Request.query.offset || 1;
+		const { limit = 10, search = '' } = Request.query;
+		const user_id = Request.body.user_id;
+		offset = (offset - 1) * limit;
+		const condition = {
+			conditions: {
+				'products.status': 1,
+				user_id,
+			},
+			join: [
+				'products on (products.id = favourite_products.product_id)',
+				'users on (users.id = products.user_id)',
+			],
+			fields: [
+				'products.*',
+				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
+				'users.address',
+				'users.profile',
+				'users.service_fees',
+				'users.delivery_charges',
+				'users.taxes',
+			],
+			limit: [offset, limit],
+			orderBy: ['id desc'],
+		};
+		if (search) {
+			condition.conditions[`like`] = {
+				name: search,
+				description: search,
+			};
+		}
+		const result = await DB.find('products', 'all', condition);
+		return {
+			message: app.Message('ProductListing'),
+			data: {
+				pagination: await apis.Paginations(
+					'products',
+					condition,
+					offset,
+					limit
+				),
+				result: app.addUrl(result, ['image', 'profile']),
+			},
+		};
+	},
+	doFavourite: async (Request) => {
+		const required = {
+			user_id: Request.body.user_id,
+			product_id: Request.body.product_id,
+		};
+		const requestData = await apis.vaildation(required, {});
+		const { user_id, product_id } = requestData;
+		const productInfo = await DB.find('products', 'first', {
+			conditions: {
+				id: requestData.product_id,
+				status: 1,
+			},
+		});
+		if (!productInfo) throw new ApiError(app.Message('productInvaild'), 400);
+		const checkFav = await DB.find('favourite_products', 'first', {
+			conditions: {
+				user_id,
+				product_id,
+			},
+		});
+		let message = 'favSuccess';
+		if (checkFav) {
+			await DB.first(`delete from favourite_products where id =${checkFav.id}`);
+			message = 'unFavSuccess';
+		} else {
+			await DB.save('favourite_products', requestData);
+		}
+		return {
+			message: app.Message(message),
+		};
+	},
 	shopProduct: async (Request) => {
 		let offset = Request.query.offset || 1;
 		const { limit = 20, search = '', is_feature = '' } = Request.query;

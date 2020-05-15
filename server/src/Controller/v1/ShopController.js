@@ -380,7 +380,8 @@ module.exports = {
 			],
 			fields: [
 				'orders.*',
-				'users.name',
+				'users.first_name',
+				'users.last_name',
 				'users.email',
 				'users.phone',
 				'users.phone_code',
@@ -435,7 +436,6 @@ const checkAllProducts = async (product_id, quantity) => {
 	let totalQyt = 0;
 	const productQyt = products.map((value, key) => {
 		const qyt = parseInt(quantityArray[key]);
-		console.log(value.stock, qyt > value.stock, qyt, value.id);
 		if (value.stock === 0 || qyt > value.stock) {
 			throw new ApiError(app.Message('stockError'), 422);
 		}
