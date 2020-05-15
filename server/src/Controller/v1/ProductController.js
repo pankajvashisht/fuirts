@@ -62,7 +62,7 @@ module.exports = {
 		const condition = {
 			conditions: {
 				'products.status': 1,
-				user_id,
+				'favourite_products.user_id': user_id,
 			},
 			join: [
 				'products on (products.id = favourite_products.product_id)',
