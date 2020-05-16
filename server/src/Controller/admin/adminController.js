@@ -100,16 +100,25 @@ class adminController extends ApiController {
 	async getProducts(Request) {
 		let offset = Request.params.offset || 1;
 		const limit = Request.params.limit || 20;
-		const orderStatus = Request.query.order_status || 1;
 		const shop_id = Request.query.shop_id || 0;
 		offset = (offset - 1) * limit;
-		let conditions = `where user_id = ${shop_id} `;
+		let conditions = '';
 		if (Request.query.q && Request.query.q !== 'undefined') {
 			const { q } = Request.query;
-			conditions += `and  name like '%${q}%' or flavour like '%${q}%'`;
+			conditions += `where products.name like '%${q}%' or description like '%${q}%' or categories.name like '%${q}%'`;
 		}
-		const query = `select * from products ${conditions} order by id desc limit ${offset}, ${limit}`;
-		const total = `select count(*) as total from products ${conditions}`;
+		if (parseInt(shop_id) !== 0) {
+			if (conditions.length === 0) {
+				conditions += `where user_id = ${shop_id} `;
+			} else {
+				conditions += `and user_id = ${shop_id} `;
+			}
+		}
+		const query = `select products.*,categories.name as category_name, CONCAT(users.first_name, " ", users.last_name) as shop_name  from 
+		products join users on (users.id=products.user_id) left join categories on (categories.id = products.category_id) 
+		${conditions} order by id desc limit ${offset}, ${limit}`;
+		const total = `select count(*) as total from 
+		products join users on (users.id=products.user_id) left join categories on (categories.id = products.category_id) ${conditions}`;
 		const result = {
 			pagination: await super.Paginations(total, offset, limit),
 			result: app.addUrl(await DB.first(query), 'image'),

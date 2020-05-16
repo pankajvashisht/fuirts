@@ -74,7 +74,7 @@ const FarmerDetails = (props) => {
 
 									<CardBody>
 										<p className='text-muted text-small mb-2'>
-											{shopDetails.name}
+											{shopDetails.first_name} {shopDetails.last_name}
 										</p>
 										<p className='mb-3'>Farmer infomations</p>
 										<p className='text-muted text-small mb-2'>Locations</p>
@@ -87,7 +87,8 @@ const FarmerDetails = (props) => {
 										<CardTitle>Details</CardTitle>
 										<div className='remove-last-border remove-last-margin remove-last-padding'>
 											<div>
-												<b> Name </b> : {shopDetails.name}
+												<b> Name </b> : {shopDetails.first_name}{' '}
+												{shopDetails.last_name}
 											</div>
 											<hr />
 											<div>
@@ -126,7 +127,7 @@ const FarmerDetails = (props) => {
 											<Card>
 												<CardBody>
 													<CardTitle>
-														Licence{' '}
+														Document
 														<Button
 															className='mb-2 float-right'
 															color='primary'
@@ -135,7 +136,7 @@ const FarmerDetails = (props) => {
 																setShowModel(true);
 															}}
 														>
-															View Licence
+															View Document
 														</Button>
 													</CardTitle>
 													<CardImg
@@ -189,7 +190,7 @@ const FarmerDetails = (props) => {
 
 				<Modal isOpen={showModel} size='lg' toggle={() => setShowModel(false)}>
 					<ModalHeader toggle={() => setShowModel(false)}>
-						View Licence
+						View Document
 					</ModalHeader>
 					<ModalBody>
 						<CardImg top alt={shopDetails.licence} src={shopDetails.licence} />

@@ -88,23 +88,38 @@ const AddFarmers = React.memo(() => {
 							<CardTitle>Add Farmer</CardTitle>
 							<Form onSubmit={addFarmer}>
 								<FormGroup row>
-									<Colxx sm={6}>
+									<Colxx sm={4}>
 										<FormGroup>
-											<Label for='exampleEmailGrid'>Farmer Name</Label>
+											<Label for='exampleEmailGrid'>First Name</Label>
 											<Input
 												type='text'
 												required={true}
-												value={shopForm.name}
+												value={shopForm.first_name}
 												onChange={({ target }) =>
-													handleInput('name', target.value)
+													handleInput('first_name', target.value)
 												}
-												name='name'
-												placeholder='Farmer Name'
+												name='first_name'
+												placeholder='First Name'
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={4}>
+										<FormGroup>
+											<Label for='exampleEmailGrid'>Last Name</Label>
+											<Input
+												type='text'
+												required={true}
+												value={shopForm.last_name}
+												onChange={({ target }) =>
+													handleInput('last_name', target.value)
+												}
+												name='last_name'
+												placeholder='Last Name'
 											/>
 										</FormGroup>
 									</Colxx>
 
-									<Colxx sm={6}>
+									<Colxx sm={4}>
 										<FormGroup>
 											<Label for='examplePasswordGrid'>Phone</Label>
 											<Input

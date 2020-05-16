@@ -132,7 +132,7 @@ const Drivers = React.memo((props) => {
 										className='w-40 w-sm-100'
 									>
 										<p className='list-item-heading mb-1 truncate'>
-											{post.name}
+											{post.first_name} {post.last_name}
 										</p>
 									</NavLink>
 
@@ -151,9 +151,19 @@ const Drivers = React.memo((props) => {
 									</div>
 								</div>
 								<div className='custom-control custom-checkbox pl-1 align-self-center pr-4'>
+									<Link
+										to={{
+											pathname: '/driver-details',
+											state: { post },
+										}}
+										className='btn btn-info btn-sm'
+									>
+										View
+									</Link>{' '}
 									<DeleteData
 										table='users'
 										view='Driver'
+										classes='btn-sm'
 										data={post.id}
 										ondelete={() => DeleteDataLocal(key)}
 									>

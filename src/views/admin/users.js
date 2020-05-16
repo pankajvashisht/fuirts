@@ -111,7 +111,7 @@ const Users = React.memo((props) => {
 										className='d-flex'
 									>
 										{' '}
-										{post.name}
+										{post.first_name} {post.last_name}
 									</Link>
 								</td>
 								<td>

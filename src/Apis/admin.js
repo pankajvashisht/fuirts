@@ -36,7 +36,8 @@ export const drivers = (page = 1, limit = 10, q = undefined) => {
 };
 export const addUser = (data) => {
 	const form = new FormData();
-	form.append('name', data.name);
+	form.append('first_name', data.first_name);
+	form.append('last_name', data.last_name);
 	form.append('address', data.address);
 	form.append('latitude', data.latitude);
 	form.append('longitude', data.longitude);

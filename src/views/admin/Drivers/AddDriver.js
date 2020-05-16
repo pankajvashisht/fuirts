@@ -88,23 +88,37 @@ const AddDriver = React.memo(() => {
 							<CardTitle>Add Driver</CardTitle>
 							<Form onSubmit={adddriver}>
 								<FormGroup row>
-									<Colxx sm={6}>
+									<Colxx sm={4}>
 										<FormGroup>
-											<Label for='exampleEmailGrid'>Driver Name</Label>
+											<Label for='exampleEmailGrid'>First Name</Label>
 											<Input
 												type='text'
 												required={true}
-												value={driverForm.name}
+												value={driverForm.first_name}
 												onChange={({ target }) =>
-													handleInput('name', target.value)
+													handleInput('first_name', target.value)
 												}
-												name='name'
-												placeholder='Driver Name'
+												name='first_name'
+												placeholder='First Name'
 											/>
 										</FormGroup>
 									</Colxx>
-
-									<Colxx sm={6}>
+									<Colxx sm={4}>
+										<FormGroup>
+											<Label for='exampleEmailGrid'>Last Name</Label>
+											<Input
+												type='text'
+												required={true}
+												value={driverForm.last_name}
+												onChange={({ target }) =>
+													handleInput('last_name', target.value)
+												}
+												name='last_name'
+												placeholder='Last Name'
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={4}>
 										<FormGroup>
 											<Label for='examplePasswordGrid'>Phone</Label>
 											<Input

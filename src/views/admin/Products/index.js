@@ -1,33 +1,30 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import ListPageHeading from 'containers/pages/ListPageHeading';
 import Pagination from 'containers/pages/Pagination';
-import { farmer as allFarmer } from 'Apis/admin';
+import { Modal, ModalHeader, ModalBody, CardImg } from 'reactstrap';
+import { products } from 'Apis/admin';
 import { NotificationManager } from 'components/common/react-notifications';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import StatusUpdate from 'components/UpdateStatus';
 import DeleteData from 'components/DeleteData';
 import { convertDate } from 'constants/defaultValues';
-const additional = {
-	currentPage: 1,
-	totalItemCount: 0,
-	totalPage: 1,
-	search: '',
-	pageSizes: [10, 20, 50, 100],
-};
-const Farmer = React.memo((props) => {
+import { additional } from './Constants';
+const Products = React.memo(({ match, history }) => {
 	const [pageInfo, setPageInfo] = useState(additional);
-	const [totalPosts, setTotalPost] = useState([]);
+	const [totalProducts, setTotalProducts] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedPageSize, setSelectedPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchText, setSearchtext] = useState(undefined);
+	const [showModel, setShowModel] = useState(false);
+	const [imageView, setImageView] = useState('');
 	useEffect(() => {
-		allFarmer(currentPage, selectedPageSize, searchText)
+		products(currentPage, selectedPageSize, 0, searchText)
 			.then((res) => {
 				const { data } = res;
 				const { result, pagination } = data.data;
 				setIsLoading(false);
-				setTotalPost(result);
+				setTotalProducts(result);
 				additional.totalItemCount = pagination.totalRecord;
 				additional.selectedPageSize = pagination.limit;
 				additional.totalPage = pagination.totalPage;
@@ -59,12 +56,12 @@ const Farmer = React.memo((props) => {
 		setCurrentPage(value);
 	};
 	const DeleteDataLocal = (key) => {
-		totalPosts.splice(key, 1);
-		setTotalPost([...totalPosts]);
+		totalProducts.splice(key, 1);
+		setTotalProducts([...totalProducts]);
 	};
 	const updateLocal = (value, key) => {
-		totalPosts[key] = value;
-		setTotalPost([...totalPosts]);
+		totalProducts[key] = value;
+		setTotalProducts([...totalProducts]);
 	};
 	const startIndex = (currentPage - 1) * selectedPageSize;
 	const endIndex = currentPage * selectedPageSize;
@@ -73,8 +70,8 @@ const Farmer = React.memo((props) => {
 	) : (
 		<Fragment>
 			<ListPageHeading
-				match={props.match}
-				heading='Farmer List'
+				match={match}
+				heading='Products'
 				changePageSize={changePageSize}
 				selectedPageSize={selectedPageSize}
 				totalItemCount={pageInfo.totalItemCount}
@@ -88,98 +85,70 @@ const Farmer = React.memo((props) => {
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Farmer Name</th>
-						<th>Profile</th>
-						<th>Phone</th>
-						<th>Email</th>
+						<th>Product Name</th>
+						<th>Product Image</th>
+						<th>Shop Name</th>
+						<th>Price</th>
+						<th>Stock</th>
 						<th>Status</th>
 						<th>Created Date</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-					{totalPosts.map((post, key) => (
+					{totalProducts.map((product, key) => (
 						<>
-							<tr>
+							<tr key={key}>
 								<td>{key + 1}</td>
 								<td>
 									<Link
 										to={{
-											pathname: '/farmer-details',
-											state: { post },
+											pathname: '/product-details',
+											state: { product },
 										}}
 										className='d-flex'
 									>
 										{' '}
-										{post.first_name}
-										{post.last_name}
+										{product.name}
 									</Link>
 								</td>
 								<td>
-									<Link
-										to={{
-											pathname: '/farmer-details',
-											state: { post },
+									<img
+										onClick={() => {
+											setShowModel(true);
+											setImageView(product.image || '/assets/img/logo.jpeg');
 										}}
-										className='d-flex'
-									>
-										<img
-											alt={post.name}
-											src={post.profile}
-											className='list-thumbnail responsive border-0 card-img-left'
-										/>
-									</Link>
-								</td>
-
-								<td>
-									<NavLink
-										to={{
-											pathname: '/farmer-details',
-											state: { post },
-										}}
-										className='w-40 w-sm-100'
-									>
-										<p className='list-item-heading mb-1 truncate'>
-											{post.phone}
-										</p>
-									</NavLink>
-								</td>
-								<td>
-									<NavLink
-										to={{
-											pathname: '/farmer-details',
-											state: { post },
-										}}
-										className='w-40 w-sm-100'
-									>
-										<p className='list-item-heading mb-1 truncate'>
-											{post.email}
-										</p>
-									</NavLink>
-								</td>
-								<td>
-									<StatusUpdate
-										table='users'
-										onUpdate={(data) => updateLocal(data, key)}
-										data={post}
+										alt={product.name}
+										src={product.image || '/assets/img/logo.jpeg'}
+										className='list-thumbnail responsive border-0 card-img-left'
 									/>
 								</td>
-								<td>{convertDate(post.created)}</td>
+								<td>{product.shop_name}</td>
+								<td>{product.price}</td>
+								<td>{product.stock}</td>
+								<td>
+									<StatusUpdate
+										table='products'
+										onUpdate={(data) => updateLocal(data, key)}
+										data={product}
+									/>
+								</td>
+								<td>{convertDate(product.created)}</td>
 								<td>
 									<Link
 										to={{
-											pathname: '/farmer-details',
-											state: { post },
+											pathname: '/product-details',
+											state: { product },
 										}}
 										className='btn btn-info btn-sm'
 									>
 										View
 									</Link>{' '}
 									<DeleteData
-										table='users'
-										view='Farmer'
-										data={post.id}
 										classes='btn-sm'
+										table='products'
+										view='Product'
+										data={product.id}
 										ondelete={() => DeleteDataLocal(key)}
 									>
 										Delete
@@ -190,14 +159,21 @@ const Farmer = React.memo((props) => {
 					))}
 				</tbody>
 			</table>
-
 			<Pagination
 				currentPage={currentPage}
 				totalPage={pageInfo.totalPage}
 				onChangePage={(i) => onChangePage(i)}
 			/>
+			<Modal isOpen={showModel} size='lg' toggle={() => setShowModel(false)}>
+				<ModalHeader toggle={() => setShowModel(false)}>
+					Image Preview
+				</ModalHeader>
+				<ModalBody>
+					<CardImg top alt={imageView} src={imageView} />
+				</ModalBody>
+			</Modal>
 		</Fragment>
 	);
 });
 
-export default Farmer;
+export default Products;

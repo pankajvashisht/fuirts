@@ -67,23 +67,36 @@ const data = [
 		subs: [
 			{
 				icon: 'simple-icon-direction',
-				label: 'Furit Category',
+				label: 'Fruit Category',
 				to: '/categories',
 			},
 			{
 				icon: 'iconsminds-add-basket',
-				label: 'Add Furit Category',
+				label: 'Add Fruit Category',
 				to: '/add-category',
 			},
 			{
 				icon: 'simple-icon-directions',
-				label: 'Furit Sub Category',
+				label: 'Fruit Sub Category',
 				to: '/sub-categories',
 			},
 			{
 				icon: 'iconsminds-add-cart',
 				label: 'Add Sub Category',
 				to: '/add-sub-category',
+			},
+		],
+	},
+	{
+		id: 'Products',
+		icon: 'iconsminds-add-cart',
+		label: 'Products',
+		to: '/products',
+		subs: [
+			{
+				icon: 'iconsminds-add-cart',
+				label: 'Products',
+				to: '/products',
 			},
 		],
 	},

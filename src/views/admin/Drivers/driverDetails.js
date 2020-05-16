@@ -60,7 +60,7 @@ const DriverDetails = (props) => {
 
 									<CardBody>
 										<p className='text-muted text-small mb-2'>
-											{driverDetails.name}
+											{driverDetails.first_name} {driverDetails.last_name}
 										</p>
 										<p className='mb-3'>Driver infomations</p>
 										<p className='text-muted text-small mb-2'>Locations</p>
