@@ -8,7 +8,13 @@ let DB = new Db();
 module.exports = {
 	getProduct: async (Request) => {
 		let offset = Request.query.offset || 1;
-		const { limit = 10, search = '', shop_id, is_feature = '' } = Request.query;
+		const {
+			limit = 10,
+			search = '',
+			shop_id,
+			is_feature = '',
+			category_id = 0,
+		} = Request.query;
 		const user_id = shop_id || Request.body.user_id;
 		const loginId = Request.body.user_id || 0;
 		offset = (offset - 1) * limit;
@@ -39,6 +45,9 @@ module.exports = {
 		}
 		if (is_feature) {
 			condition.conditions[`is_feature`] = is_feature;
+		}
+		if (parseInt(category_id) !== 0) {
+			condition.conditions[`category_id`] = category_id;
 		}
 		const result = await DB.find('products', 'all', condition);
 		return {
@@ -200,10 +209,6 @@ module.exports = {
 			is_feature: Request.body.is_feature || 0,
 		};
 		const requestData = await apis.vaildation(required, {});
-		DB.save('users', {
-			id: requestData.user_id,
-			user_type: 2,
-		}); // do temp
 		const categoryInfo = await DB.find('categories', 'first', {
 			conditions: {
 				id: requestData.category_id,
