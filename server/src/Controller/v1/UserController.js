@@ -84,8 +84,8 @@ class UserController extends ApiController {
 			authorization_key: app.createToken(),
 		};
 
-		let request_data = await super.vaildation(required, non_required);
-		let soical_id = await DB.find('users', 'first', {
+		const request_data = await super.vaildation(required, non_required);
+		const soical_id = await DB.find('users', 'first', {
 			conditions: {
 				or: {
 					email: request_data.email,
@@ -156,8 +156,8 @@ class UserController extends ApiController {
 			authorization_key: app.createToken(),
 		};
 
-		let request_data = await super.vaildation(required, non_required);
-		let login_details = await DB.find('users', 'first', {
+		const request_data = await super.vaildation(required, non_required);
+		const login_details = await DB.find('users', 'first', {
 			conditions: {
 				email: request_data.email,
 			},
