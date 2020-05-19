@@ -7,6 +7,7 @@ const {
 	ShopController,
 	CategoryController,
 	AddressController,
+	NotificationController,
 } = require('../src/Controller/v1/index');
 const { userSignup } = require('../src/Request');
 const {
@@ -40,6 +41,11 @@ router.get(
 	'/application/category',
 	Apiresponse(CategoryController.appCategory)
 );
+router.get(
+	'/notifications',
+	Apiresponse(NotificationController.getNotification)
+);
+router.get('/earning', Apiresponse(NotificationController.currentBalance));
 router.get(
 	'/category/:app_category_id([0-9]+)?',
 	Apiresponse(CategoryController.categories)

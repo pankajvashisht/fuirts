@@ -1,5 +1,7 @@
 module.exports = {
 	en: {
+		earning: 'your total earning',
+		notification: 'Notification list',
 		unFavSuccess: 'Product remove from favourite list',
 		favSuccess: 'Product add in favourite list',
 		coupenInvaild: 'Coupen invaild',
@@ -100,6 +102,8 @@ module.exports = {
 			'is your one time password to verify account on ROU.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	fr: {
+		earning: 'vos gains totaux',
+		notification: 'Liste des notifications',
 		unFavSuccess: 'Produit retiré de la liste des favoris',
 		favSuccess: 'Produit ajouté à la liste des favoris',
 		coupenInvaild: 'Coupen invaild',

@@ -1,10 +1,10 @@
+const { OrderEvent } = require('../../Events');
 const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-let apis = new ApiController();
-let DB = new Db();
-
+const apis = new ApiController();
+const DB = new Db();
 module.exports = {
 	getShop: async (Request) => {
 		let offset = Request.query.offset || 1;
@@ -162,11 +162,13 @@ module.exports = {
 		RequestData.order_id = await DB.save('orders', RequestData);
 		productDetails['order_id'] = RequestData.order_id;
 		setTimeout(() => {
-			apis.sendPush(RequestData.shop_id, {
-				message: 'You have new order',
-				data: productDetails,
-				notification_code: 1,
-			});
+			OrderEvent.emit('orderSuccess', RequestData.shop_id, RequestData);
+			console.log('hellp');
+			// apis.sendPush(RequestData.shop_id, {
+			// 	message: 'You have new order',
+			// 	data: productDetails,
+			// 	notification_code: 1,
+			// });
 		}, 100);
 		return {
 			message: app.Message('orderSuccess'),

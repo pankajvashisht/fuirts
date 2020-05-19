@@ -168,6 +168,9 @@ class ApiController {
 				'strip_id',
 				'opening_hours',
 				'card_informations',
+				'language',
+				'notification_on',
+				'order_notification',
 			],
 		});
 		if (result.card_informations) {

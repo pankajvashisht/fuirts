@@ -14,7 +14,6 @@ const AddSubCategory = ({
 	loading,
 	SubCategoryForm,
 }) => {
-	console.log(SubCategoryForm);
 	const [viweImage, setViewImage] = useState(
 		isEdit ? SubCategoryForm.image : ''
 	);
