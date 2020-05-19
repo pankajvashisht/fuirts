@@ -364,6 +364,13 @@ module.exports = {
 					notification_code: 4,
 				});
 			}
+			saveNotification({
+				user_id: order_info.user_id,
+				order_id: order_info.id,
+				shop_id: order_info.shop_id,
+				text: pushMessage,
+				type: 3,
+			});
 		}, 100);
 		return {
 			message,
@@ -378,4 +385,8 @@ const findDriver = async (latitude, longitude) => {
 	const result = await DB.first(driver);
 	if (result.length > 0) return result[0];
 	return null;
+};
+
+const saveNotification = async (data) => {
+	DB.save('notifications', data);
 };

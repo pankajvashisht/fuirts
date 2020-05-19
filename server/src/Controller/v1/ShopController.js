@@ -162,13 +162,18 @@ module.exports = {
 		RequestData.order_id = await DB.save('orders', RequestData);
 		productDetails['order_id'] = RequestData.order_id;
 		setTimeout(() => {
+			saveNotification({
+				user_id: RequestData.shop_id,
+				order_id: RequestData.order_id,
+				text: 'You have new order',
+				type: 1,
+			});
+			apis.sendPush(RequestData.shop_id, {
+				message: 'You have new order',
+				data: productDetails,
+				notification_code: 1,
+			});
 			OrderEvent.emit('orderSuccess', RequestData.shop_id, RequestData);
-			console.log('hellp');
-			// apis.sendPush(RequestData.shop_id, {
-			// 	message: 'You have new order',
-			// 	data: productDetails,
-			// 	notification_code: 1,
-			// });
 		}, 100);
 		return {
 			message: app.Message('orderSuccess'),
@@ -214,8 +219,14 @@ module.exports = {
 		if (!result) throw new ApiError(app.Message('invaildShop'), 422);
 		RequestData.rating_id = await DB.save('ratings', RequestData);
 		setTimeout(() => {
+			const pushMessage = `${Request.body.userInfo.name} give you rating ${RequestData.rating}`;
+			saveNotification({
+				user_id: RequestData.shop_id,
+				text: pushMessage,
+				type: 2,
+			});
 			apis.sendPush(RequestData.shop_id, {
-				message: `${Request.body.userInfo.name} give you rating ${RequestData.rating}`,
+				message: pushMessage,
 				data: RequestData,
 				notification_code: 2,
 			});
@@ -491,4 +502,8 @@ const updateProduct = async (product, qyt) => {
 			stock: value.stock - totalQty[key],
 		});
 	});
+};
+
+const saveNotification = async (data) => {
+	DB.save('notifications', data);
 };
