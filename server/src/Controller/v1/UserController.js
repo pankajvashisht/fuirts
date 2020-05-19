@@ -157,7 +157,7 @@ class UserController extends ApiController {
 		};
 
 		const request_data = await super.vaildation(required, non_required);
-		const login_details = await DB.find('users', 'first', {
+		let login_details = await DB.find('users', 'first', {
 			conditions: {
 				email: request_data.email,
 			},
