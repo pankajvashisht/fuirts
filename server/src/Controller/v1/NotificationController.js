@@ -55,7 +55,7 @@ module.exports = {
 		return {
 			message: App.Message('earning'),
 			data: {
-				pagination: await apis.Paginations(
+				pagination: await Apis.Paginations(
 					'amount_transfers',
 					condition,
 					offset,
