@@ -173,11 +173,10 @@ class ApiController {
 				'order_notification',
 			],
 		});
-		console.log(result);
-		if (result.card_informations) {
+		if (result.card_informations.length > 0) {
 			result.card_informations = JSON.parse(result.card_informations);
 		}
-		if (result.opening_hours) {
+		if (result.opening_hours.length > 0) {
 			result.opening_hours = JSON.parse(result.opening_hours);
 		}
 		return result;

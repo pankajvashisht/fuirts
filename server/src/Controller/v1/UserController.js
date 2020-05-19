@@ -171,7 +171,6 @@ class UserController extends ApiController {
 			await DB.save('users', request_data);
 			login_details.authorization_key = request_data.authorization_key;
 			login_details = await super.userDetails(login_details.id);
-			console.log(login_details);
 			if (login_details.profile.length > 0) {
 				login_details.profile = appURL + 'uploads/' + login_details.profile;
 			}
