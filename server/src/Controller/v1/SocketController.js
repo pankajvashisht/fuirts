@@ -21,7 +21,7 @@ const sockets = (server) => {
 			console.log('socket', orderId);
 			const result = await DB.find('orders', 'first', {
 				conditions: {
-					id: orderId,
+					'orders.id': orderId,
 				},
 				join: [
 					'users on (users.id =  orders.user_id)',
@@ -63,7 +63,7 @@ const sockets = (server) => {
 		socket.on('orderAccept', async ({ orderId }) => {
 			const result = await DB.find('orders', 'first', {
 				conditions: {
-					id: orderId,
+					'orders.id': orderId,
 				},
 				join: [
 					'users on (users.id =  orders.user_id)',
@@ -118,7 +118,7 @@ OrderEvent.on('orderSuccess', async (shopId, orderDetails) => {
 	console.log('order done!', shopId, orderDetails);
 	const result = await DB.find('orders', 'first', {
 		conditions: {
-			id: orderDetails.order_id,
+			'orders.id': orderDetails.order_id,
 		},
 		join: [
 			'users on (users.id =  orders.user_id)',
