@@ -78,7 +78,7 @@ OrderEvent.on('orderSuccess', async (shopId, orderDetails) => {
 		if (result.address_details) {
 			result.address_details = JSON.parse(result.address_details);
 		}
-		socketConnect.broadcast.to(shop_id).emit('newOrder', result);
+		socketConnect.broadcast.to(shopId).emit('newOrder', result);
 		console.log('result done');
 	}
 });
