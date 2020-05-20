@@ -44,7 +44,7 @@ const sockets = (server) => {
 			}
 		});
 
-		socket.on('orderAccept', ({ orderId }) => {
+		socket.on('orderAccept', async ({ orderId }) => {
 			const result = await DB.find('orders', 'first', {
 				conditions: {
 					id: orderId,
