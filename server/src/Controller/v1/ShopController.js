@@ -445,6 +445,7 @@ module.exports = {
 				'shops.min_order as min_order',
 			],
 			orderBy: ['orders.id desc'],
+			limit: 1,
 		};
 		const result = await DB.find('orders', 'all', condition);
 		if (result.length === 0) throw new ApiError('invaildOrder', 403);
