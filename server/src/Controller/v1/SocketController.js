@@ -19,6 +19,7 @@ const sockets = (server) => {
 		});
 
 		socket.on('newOrder', async ({ orderId }) => {
+			console.log('socket',orderId);
 			const result = await DB.find('orders', 'first', {
 				conditions: {
 					id: orderId,
@@ -65,6 +66,21 @@ const sockets = (server) => {
 module.exports = sockets;
 
 OrderEvent.on('orderSuccess', (shopId, orderDetails) => {
-	console.log('order done!', shopId);
-	socketConnect.broadcast.to(shopId).emit('newOrder', shopId, orderDetails);
+	console.log('order done!', shopId, orderDetails);
+	const result = await DB.find('orders', 'first', {
+		conditions: {
+			id: orderDetails.order_id,
+		},
+	});
+	if (result) {
+		if (result.product_details) {
+			result.product_details = JSON.parse(result.product_details);
+		}
+		if (result.address_details) {
+			result.address_details = JSON.parse(result.address_details);
+		}
+		socketConnect.broadcast.to(shop_id).emit('newOrder', result);
+		console.log('result done');
+	}
+	
 });
