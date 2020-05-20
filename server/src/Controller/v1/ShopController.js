@@ -163,7 +163,8 @@ module.exports = {
 		productDetails['order_id'] = RequestData.order_id;
 		setTimeout(() => {
 			saveNotification({
-				user_id: RequestData.shop_id,
+				user_id: RequestData.user_id,
+				shop_id: RequestData.shop_id,
 				order_id: RequestData.order_id,
 				text: 'You have new order',
 				type: 1,
@@ -221,7 +222,8 @@ module.exports = {
 		setTimeout(() => {
 			const pushMessage = `${Request.body.userInfo.name} give you rating ${RequestData.rating}`;
 			saveNotification({
-				user_id: RequestData.shop_id,
+				user_id: RequestData.user_id,
+				shop_id: RequestData.shop_id,
 				text: pushMessage,
 				type: 2,
 			});
