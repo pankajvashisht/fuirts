@@ -226,6 +226,7 @@ class UserController extends ApiController {
 			order_notification: req.body.order_notification,
 			notification_on: req.body.notification_on,
 			language: req.body.language,
+			dob: req.body.language,
 		};
 		const request_data = await super.vaildation(required, non_required);
 		if (req.files && req.files.profile) {
