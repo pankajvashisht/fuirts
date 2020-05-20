@@ -5,7 +5,6 @@ const DB = new Db();
 var socketConnect = '';
 const sockets = (server) => {
 	const io = require('socket.io')(server);
-	console.log('dfdf');
 	io.on('connection', (socket) => {
 		socketConnect = socket;
 		socket.on('disconnect', (user_id) => {
@@ -19,7 +18,7 @@ const sockets = (server) => {
 		});
 
 		socket.on('newOrder', async ({ orderId }) => {
-			console.log('socket',orderId);
+			console.log('socket', orderId);
 			const result = await DB.find('orders', 'first', {
 				conditions: {
 					id: orderId,
@@ -65,7 +64,7 @@ const sockets = (server) => {
 };
 module.exports = sockets;
 
-OrderEvent.on('orderSuccess', (shopId, orderDetails) => {
+OrderEvent.on('orderSuccess', async (shopId, orderDetails) => {
 	console.log('order done!', shopId, orderDetails);
 	const result = await DB.find('orders', 'first', {
 		conditions: {
@@ -82,5 +81,4 @@ OrderEvent.on('orderSuccess', (shopId, orderDetails) => {
 		socketConnect.broadcast.to(shop_id).emit('newOrder', result);
 		console.log('result done');
 	}
-	
 });
