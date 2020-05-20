@@ -23,6 +23,31 @@ const sockets = (server) => {
 				conditions: {
 					id: orderId,
 				},
+				join: [
+					'users on (users.id =  orders.user_id)',
+					'users as shops on (shops.id = orders.shop_id)',
+				],
+				fields: [
+					'orders.*',
+					'users.first_name',
+					'users.last_name',
+					'users.email',
+					'users.phone',
+					'users.phone_code',
+					'users.address',
+					'users.latitude',
+					'users.longitude',
+					'users.profile',
+					'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
+					'shops.email as shop_email',
+					'shops.phone as shop_phone',
+					'shops.phone_code as shop_phone_code',
+					'shops.address as shop_address',
+					'shops.latitude as shop_lat',
+					'shops.longitude as shop_lng',
+					'shops.profile as shop_profile',
+					'shops.min_order as min_order',
+				],
 			});
 			if (result) {
 				if (result.product_details) {
@@ -40,6 +65,31 @@ const sockets = (server) => {
 				conditions: {
 					id: orderId,
 				},
+				join: [
+					'users on (users.id =  orders.user_id)',
+					'users as shops on (shops.id = orders.shop_id)',
+				],
+				fields: [
+					'orders.*',
+					'users.first_name',
+					'users.last_name',
+					'users.email',
+					'users.phone',
+					'users.phone_code',
+					'users.address',
+					'users.latitude',
+					'users.longitude',
+					'users.profile',
+					'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
+					'shops.email as shop_email',
+					'shops.phone as shop_phone',
+					'shops.phone_code as shop_phone_code',
+					'shops.address as shop_address',
+					'shops.latitude as shop_lat',
+					'shops.longitude as shop_lng',
+					'shops.profile as shop_profile',
+					'shops.min_order as min_order',
+				],
 			});
 			if (result) {
 				if (result.product_details) {
@@ -70,6 +120,31 @@ OrderEvent.on('orderSuccess', async (shopId, orderDetails) => {
 		conditions: {
 			id: orderDetails.order_id,
 		},
+		join: [
+			'users on (users.id =  orders.user_id)',
+			'users as shops on (shops.id = orders.shop_id)',
+		],
+		fields: [
+			'orders.*',
+			'users.first_name',
+			'users.last_name',
+			'users.email',
+			'users.phone',
+			'users.phone_code',
+			'users.address',
+			'users.latitude',
+			'users.longitude',
+			'users.profile',
+			'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
+			'shops.email as shop_email',
+			'shops.phone as shop_phone',
+			'shops.phone_code as shop_phone_code',
+			'shops.address as shop_address',
+			'shops.latitude as shop_lat',
+			'shops.longitude as shop_lng',
+			'shops.profile as shop_profile',
+			'shops.min_order as min_order',
+		],
 	});
 	if (result) {
 		if (result.product_details) {
