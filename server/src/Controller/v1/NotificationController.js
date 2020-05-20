@@ -44,7 +44,7 @@ module.exports = {
 					offset,
 					limit
 				),
-				result: notificationList,
+				result: app.addUrl(notificationList, 'profile'),
 			},
 		};
 	},
