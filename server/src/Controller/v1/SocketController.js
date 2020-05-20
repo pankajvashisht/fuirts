@@ -1,12 +1,10 @@
 const { OrderEvent } = require('../../Events');
 const { socketConfig } = require('../../../config');
-OrderEvent.on('orderSuccess', (shopId, orderDetails) => {
-	console.log('order done!', shopId);
-	socket.broadcast.to(shopId).emit('newOrder', shopId, orderDetails);
-});
+var socketConnect = '';
 const sockets = (server) => {
 	const io = require('socket.io')(server, socketConfig);
 	io.on('connection', (socket) => {
+		socketConnect = socket;
 		socket.on('disconnect', (user_id) => {
 			console.log('users leave the room');
 			socket.leave(user_id);
@@ -46,3 +44,8 @@ const sockets = (server) => {
 	});
 };
 module.exports = sockets;
+
+OrderEvent.on('orderSuccess', (shopId, orderDetails) => {
+	console.log('order done!', shopId);
+	socketConnect.broadcast.to(shopId).emit('newOrder', shopId, orderDetails);
+});
