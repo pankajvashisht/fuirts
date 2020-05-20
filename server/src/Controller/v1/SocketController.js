@@ -4,23 +4,14 @@ const Db = require('../../../libary/sqlBulider');
 const DB = new Db();
 var socketConnect = '';
 const sockets = (server) => {
-	const io = require('socket.io')(server, socketConfig);
+	const io = require('socket.io')(server);
+	console.log('dfdf');
 	io.on('connection', (socket) => {
 		socketConnect = socket;
 		socket.on('disconnect', (user_id) => {
 			console.log('users leave the room');
 			socket.leave(user_id);
 		});
-		OrderEvent.on('orderSuccess', (shopId, orderDetails) => {
-			console.log('order done!', shopId);
-			socket.broadcast.to(shopId).emit('newOrder', shopId, orderDetails);
-		});
-
-		OrderEvent.on('orderAccept', (shopId, orderDetails) => {
-			console.log('an event occurred!');
-			socket.broadcast.to(shopId).emit('orderAccept', shopId, orderDetails);
-		});
-
 		socket.on('connected', (user_id) => {
 			socket.join(user_id);
 			console.log('user join the socket', user_id);

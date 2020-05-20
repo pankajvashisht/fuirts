@@ -80,6 +80,7 @@
     "redux-saga": "^1.0.2",
     "shards-react": "^1.0.3",
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "sortablejs": "^1.6.1",
     "stripe": "^8.38.0",
     "sweetalert": "^2.1.2",
