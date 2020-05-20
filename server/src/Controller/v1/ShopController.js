@@ -220,7 +220,7 @@ module.exports = {
 		if (!result) throw new ApiError(app.Message('invaildShop'), 422);
 		RequestData.rating_id = await DB.save('ratings', RequestData);
 		setTimeout(() => {
-			const pushMessage = `${Request.body.userInfo.name} give you rating ${RequestData.rating}`;
+			const pushMessage = `${Request.body.userInfo.first_name} giving you rating ${RequestData.rating}`;
 			saveNotification({
 				user_id: RequestData.user_id,
 				shop_id: RequestData.shop_id,
