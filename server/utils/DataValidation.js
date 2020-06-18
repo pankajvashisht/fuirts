@@ -70,9 +70,9 @@ const checkAllRequiredFields = (fields) => {
 	if (empty.length !== 0) {
 		message = empty.toString();
 		if (empty.length > 1) {
-			message += ' ' + lang[_lang].fieldsRequired;
+			message += ' ' + lang[_Lang].fieldsRequired;
 		} else {
-			message += ' ' + lang[_lang].fieldsRequired;
+			message += ' ' + lang[_Lang].fieldsRequired;
 		}
 		return [true, message];
 	}
