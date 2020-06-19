@@ -156,9 +156,13 @@ module.exports = {
 				'products.status': 1,
 				user_id: shop_id,
 			},
-			join: ['users on (users.id = products.user_id)'],
+			join: [
+				'users on (users.id = products.user_id)',
+				'categories on (categories.id = products.category_id)',
+			],
 			fields: [
 				'products.*',
+				'categories.name as category_name',
 				`(select count(id) from favourite_products where user_id=${loginId} and product_id=products.id) as is_fav`,
 				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
