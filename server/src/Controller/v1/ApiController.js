@@ -120,7 +120,7 @@ class ApiController {
 			currentPage: Math.round(page / limit, 0) + 1,
 			totalPage,
 			totalRecord: totalRecord[0].totalRecord,
-			limit,
+			limit: parseInt(limit),
 		};
 	}
 
