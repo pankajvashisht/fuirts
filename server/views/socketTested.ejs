@@ -111,6 +111,9 @@ URI     : https://colorlib.com
 			var socket = io.connect('http://3.17.254.50:4000');
 			console.log(socket);
 			socket.emit('connected', 89);
+			socket.on('connected', (data) => {
+				console.log('i am joining the room', data);
+			});
 			socket.on('newOrder', (data) => {
 				console.log('new order is here');
 				console.log(data);
