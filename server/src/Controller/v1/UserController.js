@@ -145,6 +145,7 @@ class UserController extends ApiController {
 		const required = {
 			email: req.body.email,
 			password: req.body.password,
+			user_type: req.body.user_type || 4,
 		};
 		const non_required = {
 			device_type: req.body.device_type || 0,
@@ -157,6 +158,7 @@ class UserController extends ApiController {
 		let login_details = await DB.find('users', 'first', {
 			conditions: {
 				email: request_data.email,
+				user_type: request_data.user_type,
 			},
 			fields: ['id', 'password', 'status', 'email'],
 		});
