@@ -27,7 +27,7 @@ class UserController extends ApiController {
 		const user_id = await DB.save('users', RequestData);
 		RequestData.lang = Request.lang;
 		setTimeout(() => {
-			paymentRegister(RequestData);
+			paymentRegister(RequestData, user_id);
 			this.mails(RequestData);
 		}, 0);
 		const usersInfo = await super.userDetails(user_id);
@@ -278,7 +278,7 @@ class UserController extends ApiController {
 
 module.exports = UserController;
 
-const paymentRegister = (RequestData) => {
+const paymentRegister = (RequestData, user_id) => {
 	const {
 		email,
 		card_informations,
@@ -292,6 +292,7 @@ const paymentRegister = (RequestData) => {
 		latitude,
 		longitude,
 		is_default: 1,
+		user_id,
 	});
 	if (parseInt(user_type) !== 0) {
 		//PaymentController.createAccount(user_id, email, card_informations);
