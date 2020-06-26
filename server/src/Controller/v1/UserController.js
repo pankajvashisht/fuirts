@@ -27,12 +27,9 @@ class UserController extends ApiController {
 		const user_id = await DB.save('users', RequestData);
 		RequestData.lang = Request.lang;
 		setTimeout(() => {
-			const { email, card_informations, user_type } = RequestData;
-			if (parseInt(user_type) !== 0) {
-				//PaymentController.createAccount(user_id, email, card_informations);
-			}
+			paymentRegister(RequestData);
 			this.mails(RequestData);
-		}, 100);
+		}, 0);
 		const usersInfo = await super.userDetails(user_id);
 		if (usersInfo.profile.length > 0) {
 			usersInfo.profile = appURL + 'uploads/' + usersInfo.profile;
@@ -280,3 +277,23 @@ class UserController extends ApiController {
 }
 
 module.exports = UserController;
+
+const paymentRegister = (RequestData) => {
+	const {
+		email,
+		card_informations,
+		user_type,
+		address,
+		latitude,
+		longitude,
+	} = RequestData;
+	DB.save('user_addresses', {
+		address,
+		latitude,
+		longitude,
+		is_default: 1,
+	});
+	if (parseInt(user_type) !== 0) {
+		//PaymentController.createAccount(user_id, email, card_informations);
+	}
+};
