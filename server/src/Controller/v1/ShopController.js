@@ -176,6 +176,8 @@ module.exports = {
 			});
 			OrderEvent.emit('orderSuccess', RequestData.shop_id, RequestData);
 		}, 100);
+		RequestData.product_details = JSON.parse(RequestData.product_details);
+		RequestData.address_details = JSON.parse(RequestData.address_details);
 		return {
 			message: app.Message('orderSuccess'),
 			data: RequestData,
