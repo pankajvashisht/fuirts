@@ -80,8 +80,9 @@ router
 		return res.render('changepassword', successData);
 	});
 
-router.route('/socketConnect').get((req, res) => {
-	res.render('socketTested', { shopId: 2 });
+router.route('/socketConnect').get((Request, res) => {
+	const { user_id = 85 } = Request.query;
+	res.render('socketTested', { shopId: user_id });
 });
 
 module.exports = router;

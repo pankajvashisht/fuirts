@@ -109,8 +109,9 @@ URI     : https://colorlib.com
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
 		<script>
 			var socket = io.connect('http://3.17.254.50:4000');
-			console.log(socket);
-			socket.emit('connected', 86);
+			console.log(socket, '<%= shopId %>');
+			socket.emit('connected', '<%= shopId %>');
+			socket.emit('connected', 85);
 			socket.on('connected', (data) => {
 				console.log('i am joining the room', data);
 			});
