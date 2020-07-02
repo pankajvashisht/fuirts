@@ -338,8 +338,7 @@ module.exports = {
 		const user_id = Request.body.user_id;
 		const user_type = Request.body.userInfo.user_type;
 		let offset = Request.params.offset || 1;
-		const limit = Request.query.limit || 10;
-		const order_status = Request.query.order_status || 0;
+		const { order_status = 0, limit = 10 } = Request.query;
 		offset = (offset - 1) * limit;
 		const conditions = {};
 		if (parseInt(order_status) === 0) {
