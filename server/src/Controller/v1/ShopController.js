@@ -341,12 +341,16 @@ module.exports = {
 		const { order_status = 0, limit = 10 } = Request.query;
 		offset = (offset - 1) * limit;
 		const conditions = {};
-		if (parseInt(order_status) === 0) {
+		if (parseInt(order_status) !== 2 || parseInt(order_status) !== 4) {
 			conditions['NotEqual'] = {
 				order_status: 4,
+				order_status: 2,
 			};
 		} else {
-			conditions['order_status'] = 4;
+			conditions['or'] = {
+				order_status: 2,
+				order_status: 4,
+			};
 		}
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
