@@ -87,13 +87,13 @@ const saveNotification = async (status, result) => {
 		order_id: result.id,
 	};
 	DB.save('notifications', notificationObject);
-	Object.assign(notificationObjectm, {
+	Object.assign(notificationObject, {
 		message: text,
 	});
 	//Helper.sendPush(user_id, notificationObjectm);
 	return {
 		user_id,
-		notificationObjectm,
+		notificationObject,
 	};
 };
 
