@@ -1,6 +1,8 @@
 const { OrderEvent } = require('../../Events');
 const Db = require('../../../libary/sqlBulider');
+const ApiController = require('./ApiController');
 const DB = new Db();
+const API = new ApiController();
 var socketConnect = '';
 const sockets = (server) => {
 	const io = require('socket.io')(server);
@@ -127,13 +129,21 @@ const sockets = (server) => {
 					result.address_details = JSON.parse(result.address_details);
 				}
 				const { user_id, shop_id } = result;
-				DB.save('notifications', {
+				const notificationObject = {
 					user_id,
 					shop_id,
 					text,
 					type,
 					order_id: orderId,
-				});
+				};
+				setTimeout(() => {
+					DB.save('notifications', notificationObject);
+					Object.assign(notificationObjectm, {
+						message: text,
+					});
+					API.sendPush(user_id, notificationObjectm);
+				}, 0);
+
 				socket.broadcast.to(result.user_id).emit('orderAccept', result);
 			}
 		});
