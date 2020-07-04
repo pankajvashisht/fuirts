@@ -20,44 +20,8 @@ const sockets = (server) => {
 		});
 
 		socket.on('newOrder', async ({ orderId }) => {
-			console.log('socket', orderId);
-			const result = await DB.find('orders', 'first', {
-				conditions: {
-					'orders.id': orderId,
-				},
-				join: [
-					'users on (users.id =  orders.user_id)',
-					'users as shops on (shops.id = orders.shop_id)',
-				],
-				fields: [
-					'orders.*',
-					'users.first_name',
-					'users.last_name',
-					'users.email',
-					'users.phone',
-					'users.phone_code',
-					'users.address',
-					'users.latitude',
-					'users.longitude',
-					'users.profile',
-					'CONCAT(shops.first_name, " ", shops.last_name) as shop_name',
-					'shops.email as shop_email',
-					'shops.phone as shop_phone',
-					'shops.phone_code as shop_phone_code',
-					'shops.address as shop_address',
-					'shops.latitude as shop_lat',
-					'shops.longitude as shop_lng',
-					'shops.profile as shop_profile',
-					'shops.min_order as min_order',
-				],
-			});
+			const result = await orderDetails(orderId);
 			if (result) {
-				if (result.product_details) {
-					result.product_details = JSON.parse(result.product_details);
-				}
-				if (result.address_details) {
-					result.address_details = JSON.parse(result.address_details);
-				}
 				socket.broadcast.to(result.shop_id).emit('newOrder', result);
 			}
 		});
@@ -80,7 +44,7 @@ const sockets = (server) => {
 					delete orderObject.estimate_time;
 				}
 				await updateOrder(orderObject);
-				const result = await orderDetails(orderDetail.order_id);
+				const result = await orderDetails(orderId);
 				if (result) {
 					setTimeout(() => {
 						saveNotification(status, result);
