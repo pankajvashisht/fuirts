@@ -10,7 +10,7 @@ const sockets = (server) => {
 	io.on('connection', (socket) => {
 		socketConnect = socket;
 		socket.on('disconnect', (user_id) => {
-			console.log('users leave the room');
+			console.log('users leave the room', user_id);
 			socket.leave(user_id);
 		});
 		socket.on('connected', (user_id) => {
@@ -46,6 +46,7 @@ const sockets = (server) => {
 				await updateOrder(orderObject);
 				const result = await orderDetails(orderId);
 				if (result) {
+					console.log('working', orderId);
 					setTimeout(() => {
 						saveNotification(status, result);
 					}, 0);
