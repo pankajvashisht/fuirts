@@ -6,7 +6,7 @@ const {
 	updateOrder,
 } = require('./OrderController');
 var socketConnect = '';
-const API = ApiController();
+const API = new ApiController();
 const sockets = (server) => {
 	const io = require('socket.io')(server);
 	io.on('connection', (socket) => {
