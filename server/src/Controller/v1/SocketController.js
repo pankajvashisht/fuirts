@@ -32,7 +32,7 @@ const sockets = (server) => {
 				orderId,
 				status,
 				rejectMessage = 'your order is rejeted',
-				estimateTime,
+				estimateTime = '30 min',
 			}) => {
 				const orderObject = {
 					id: orderId,
