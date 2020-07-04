@@ -1,12 +1,10 @@
 const Db = require('../../../libary/sqlBulider');
-const ApiController = require('./ApiController');
 const {
 	currentTime,
 	currentMonthFirstDate,
 	currentWeekFirstDate,
 } = require('../../../libary/CommanMethod');
 const DB = new Db();
-const Helper = new ApiController();
 
 const orderDetails = async (orderId) => {
 	const result = await DB.find('orders', 'first', {
@@ -92,7 +90,11 @@ const saveNotification = async (status, result) => {
 	Object.assign(notificationObjectm, {
 		message: text,
 	});
-	Helper.sendPush(user_id, notificationObjectm);
+	//Helper.sendPush(user_id, notificationObjectm);
+	return {
+		user_id,
+		notificationObjectm,
+	};
 };
 
 const shopRecord = async (shopId) => {

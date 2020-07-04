@@ -1,10 +1,12 @@
 const { OrderEvent } = require('../../Events');
+const ApiController = require('./ApiController');
 const {
 	saveNotification,
 	orderDetails,
 	updateOrder,
 } = require('./OrderController');
 var socketConnect = '';
+const API = ApiController();
 const sockets = (server) => {
 	const io = require('socket.io')(server);
 	io.on('connection', (socket) => {
@@ -48,7 +50,8 @@ const sockets = (server) => {
 				if (result) {
 					console.log('working', orderId);
 					setTimeout(() => {
-						saveNotification(status, result);
+						const { user_id, pushObject } = await saveNotification(status, result);
+						API.sendPush(user_id, pushObject);
 					}, 0);
 					socket.broadcast.to(result.user_id).emit('orderAccept', result);
 				}
