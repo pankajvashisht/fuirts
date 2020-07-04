@@ -14,6 +14,7 @@ const { config, mails, SMS, lang } = require('../config');
 const fs = require('fs');
 const crypto = require('crypto');
 const twilio = require('twilio');
+const apn = require('apn');
 const { MailClient } = require('./mails');
 module.exports = {
 	send_mail: function (object) {
@@ -80,7 +81,29 @@ module.exports = {
 				console.log(err);
 			});
 	},
-	send_push_apn: function () {},
+	sendPushApn: (pushData) => {
+		try {
+			const options = {
+				cert: path.join(__dirname, 'cert.pem'),
+				key: path.join(__dirname, 'key.pem'),
+				passphrase: process.env.APNPASSWORD || '123',
+				ca: path.join(__dirname, 'aps_development.cer'),
+				production: false,
+				gateway: 'gateway.sandbox.push.apple.com',
+				port: 2195,
+				enhanced: true,
+			};
+			const apnConnection = new apn.Connection(options);
+			const myDevice = new apn.Device('<TOKEN>');
+			const note = new apn.Notification();
+			note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+			note.badge = 3;
+			note.sound = 'ping.aiff';
+			note.alert = 'You have a new message';
+			note.payload = { msgFrom: 'Alex' };
+			note.device = myDevice;
+		} catch (error) {}
+	},
 	paypal: async function () {},
 	stripe: async function () {},
 	brain_tree: async function () {},
