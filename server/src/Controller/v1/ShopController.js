@@ -329,6 +329,21 @@ module.exports = {
 		orderInfo.created = app.currentTime;
 		orderInfo.modified = app.currentTime;
 		orderInfo.order_id = await DB.save('orders', orderInfo);
+		setTimeout(() => {
+			saveNotification({
+				user_id: orderInfo.user_id,
+				shop_id: orderInfo.shop_id,
+				order_id: orderInfo.order_id,
+				text: 'You have new order',
+				type: 1,
+			});
+			Helper.sendPush(orderInfo.shop_id, {
+				message: 'You have new order',
+				data: JSON.parse(orderInfo.product_details),
+				notification_code: 1,
+			});
+			OrderEvent.emit('orderSuccess', orderInfo.shop_id, orderInfo);
+		}, 100);
 		return {
 			message: app.Message('orderSuccess'),
 			data: orderInfo,
