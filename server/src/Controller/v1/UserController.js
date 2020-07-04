@@ -212,6 +212,8 @@ class UserController extends ApiController {
 			latitude: req.body.latitude,
 			longitude: req.body.longitude,
 			address: req.body.address,
+			paypal_email: req.body.paypal_email,
+			stripe_id: req.body.stripe_id,
 			accept_order: req.body.accept_order,
 			taxes: req.body.taxes,
 			service_fees: req.body.service_fees,
