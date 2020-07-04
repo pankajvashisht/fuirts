@@ -342,14 +342,15 @@ module.exports = {
 		offset = (offset - 1) * limit;
 		const conditions = {};
 		if (parseInt(order_status) === 2 || parseInt(order_status) === 4) {
-			conditions['NotEqual'] = {
+			conditions['or'] = {
 				order_status: 4,
 				order_status: 2,
 			};
 		} else {
 			conditions['or'] = {
+				order_status: 1,
 				order_status: 2,
-				order_status: 4,
+				order_status: 0,
 			};
 		}
 		if (user_type === 1) {
