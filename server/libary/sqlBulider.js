@@ -173,7 +173,7 @@ class Query {
 	}
 
 	async first(qry) {
-		console.log(qry);
+		//console.log(qry);
 		const query = String(qry);
 		try {
 			let result = new Promise((resolve, reject) => {
