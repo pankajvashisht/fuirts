@@ -18,9 +18,7 @@ const sockets = (server) => {
 		socket.on('connected', (user_id) => {
 			socket.join(user_id);
 			console.log('user join the socket', user_id);
-			setTimeout(() => {
-				socket.broadcast.to(user_id).emit('connected', user_id);
-			}, 1000);
+			socket.broadcast.to(user_id).emit('connected', user_id);
 		});
 
 		socket.on('newOrder', async ({ orderId }) => {
