@@ -248,6 +248,6 @@ module.exports = {
 		const date = new Date();
 		var day = date.getDay(),
 			diff = date.getDate() - day + (day == 0 ? -6 : 1);
-		return Math.round(new Date(d.setDate(diff)).getTime() / 1000, 0);
+		return Math.round(new Date(date.setDate(diff)).getTime() / 1000, 0);
 	},
 };
