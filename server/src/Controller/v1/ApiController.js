@@ -129,9 +129,13 @@ class ApiController {
 			conditions: {
 				id: user_id,
 			},
+			fields: ['device_token', 'device_type'],
 		});
 		if (User.device_token) {
 			pushObject['token'] = User.device_token;
+			if (User.device_type === 2) {
+				return App.sendPushApn(pushObject);
+			}
 			App.send_push(pushObject);
 		}
 	}

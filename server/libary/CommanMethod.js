@@ -84,25 +84,26 @@ module.exports = {
 	sendPushApn: (pushData) => {
 		try {
 			const options = {
-				cert: path.join(__dirname, 'cert.pem'),
-				key: path.join(__dirname, 'key.pem'),
-				passphrase: process.env.APNPASSWORD || '123',
-				ca: path.join(__dirname, 'aps_development.cer'),
+				token: {
+					key: `${config.rootPath}/config/apn.p8`,
+					keyId: 'key-id',
+					teamId: 'developer-team-id',
+				},
 				production: false,
-				gateway: 'gateway.sandbox.push.apple.com',
-				port: 2195,
-				enhanced: true,
 			};
-			const apnConnection = new apn.Connection(options);
-			const myDevice = new apn.Device('<TOKEN>');
+			const apnProvider = new apn.Provider(options);
 			const note = new apn.Notification();
 			note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-			note.badge = 3;
+			note.badge = 1;
 			note.sound = 'ping.aiff';
-			note.alert = 'You have a new message';
-			note.payload = { msgFrom: 'Alex' };
-			note.device = myDevice;
-		} catch (error) {}
+			note.alert = `\uD83D\uDCE7 \u2709 ${pushData.message}`;
+			note.payload = pushData;
+			apnProvider.send(note, pushData.token).then((result) => {
+				console.log('apn success', result);
+			});
+		} catch (error) {
+			console.log('apn error', result);
+		}
 	},
 	paypal: async function () {},
 	stripe: async function () {},
@@ -155,7 +156,7 @@ module.exports = {
 	},
 	loadModel: function (file_name = null) {
 		try {
-			if (fs.existsSync(config.root_path + 'model/' + file_name + '.js')) {
+			if (fs.existsSync(config.rootPath + 'model/' + file_name + '.js')) {
 				let models = require('../model/' + file_name);
 				return new models();
 			} else {

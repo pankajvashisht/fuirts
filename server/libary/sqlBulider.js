@@ -12,7 +12,7 @@ class Query {
 	async find(table_name, type, condition = {}) {
 		try {
 			let table = table_name;
-			if (fs.existsSync(config.root_path + 'model/' + table_name + '.js')) {
+			if (fs.existsSync(config.rootPath + 'model/' + table_name + '.js')) {
 				let models = require(path + table_name);
 				let infomation = new models();
 
