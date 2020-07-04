@@ -49,8 +49,11 @@ const sockets = (server) => {
 				const result = await orderDetails(orderId);
 				if (result) {
 					console.log('working', orderId);
-					setTimeout(() => {
-						const { user_id, pushObject } = await saveNotification(status, result);
+					setTimeout(async () => {
+						const { user_id, pushObject } = await saveNotification(
+							status,
+							result
+						);
 						API.sendPush(user_id, pushObject);
 					}, 0);
 					socket.broadcast.to(result.user_id).emit('orderAccept', result);
