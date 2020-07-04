@@ -85,7 +85,7 @@ module.exports = {
 		try {
 			const options = {
 				token: {
-					key: `${config.rootPath}/config/apn.p8`,
+					key: `${config.rootPath}/apn.p8`,
 					keyId: process.env.APNKEYID,
 					teamId: 'developer-team-id',
 				},
