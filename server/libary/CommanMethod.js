@@ -102,7 +102,7 @@ module.exports = {
 				console.log('apn success', result);
 			});
 		} catch (error) {
-			console.log('apn error', result);
+			console.log('apn error', error);
 		}
 	},
 	paypal: async function () {},
