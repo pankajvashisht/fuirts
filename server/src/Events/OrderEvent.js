@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
-
 class OrderEvent extends EventEmitter {}
-module.exports = new OrderEvent();
+const emmiter = new OrderEvent();
+emmiter.setMaxListeners(0);
+module.exports = emmiter;
