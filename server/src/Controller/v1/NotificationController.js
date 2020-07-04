@@ -24,7 +24,7 @@ module.exports = {
 				conditions: {
 					user_id: id,
 					IN: {
-						type: [3, 4, 5],
+						type: [3, 4, 5, 6],
 					},
 				},
 				join: ['users on (notifications.shop_id = users.id)'],

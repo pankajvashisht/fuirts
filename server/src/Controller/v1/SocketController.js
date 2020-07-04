@@ -1,5 +1,4 @@
 const { OrderEvent } = require('../../Events');
-const { socketConfig } = require('../../../config');
 const Db = require('../../../libary/sqlBulider');
 const DB = new Db();
 var socketConnect = '';
@@ -65,6 +64,31 @@ const sockets = (server) => {
 				id: orderId,
 				order_status: status,
 			});
+			let text = '';
+			let type = 3;
+			switch (status) {
+				case 1:
+					text = 'Your order accepted by shop';
+					type = 3;
+					break;
+				case 2:
+					text = 'Your order rejected by shop';
+					type = 4;
+					break;
+				case 3:
+					text = 'Your order on the way';
+					type = 5;
+					break;
+				case 4:
+					text = 'Your order successfully delivered';
+					type = 6;
+					break;
+				default:
+					text = 'Your order accepted by shop';
+					type = 3;
+					break;
+			}
+
 			const result = await DB.find('orders', 'first', {
 				conditions: {
 					'orders.id': orderId,
@@ -102,6 +126,14 @@ const sockets = (server) => {
 				if (result.address_details) {
 					result.address_details = JSON.parse(result.address_details);
 				}
+				const { user_id, shop_id } = result;
+				DB.save('notifications', {
+					user_id,
+					shop_id,
+					text,
+					type,
+					order_id: orderId,
+				});
 				socket.broadcast.to(result.user_id).emit('orderAccept', result);
 			}
 		});
