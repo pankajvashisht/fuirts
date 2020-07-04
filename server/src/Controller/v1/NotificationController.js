@@ -23,6 +23,9 @@ module.exports = {
 			Object.assign(condition, {
 				conditions: {
 					user_id: id,
+					IN: {
+						type: [3, 4, 5],
+					},
 				},
 				join: ['users on (notifications.shop_id = users.id)'],
 			});
@@ -30,6 +33,9 @@ module.exports = {
 			Object.assign(condition, {
 				conditions: {
 					shop_id: id,
+					IN: {
+						type: [1, 2],
+					},
 				},
 				join: ['users on (notifications.user_id = users.id)'],
 			});
