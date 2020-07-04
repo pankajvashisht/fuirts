@@ -1,7 +1,6 @@
-const ApiController = require('./ApiController');
+const { Helper } = require('./index');
 const Db = require('../../../libary/sqlBulider');
 const App = require('../../../libary/CommanMethod');
-const Apis = new ApiController();
 const DB = new Db();
 
 module.exports = {
@@ -25,7 +24,7 @@ module.exports = {
 		return {
 			message: App.Message('appCategory'),
 			data: {
-				pagination: await Apis.Paginations(
+				pagination: await Helper.Paginations(
 					'app_categories',
 					condition,
 					offset,
@@ -67,7 +66,7 @@ module.exports = {
 		return {
 			message: App.Message('category'),
 			data: {
-				pagination: await Apis.Paginations(
+				pagination: await Helper.Paginations(
 					'categories',
 					condition,
 					offset,
@@ -102,7 +101,7 @@ module.exports = {
 		return {
 			message: App.Message('subCategory'),
 			data: {
-				pagination: await Apis.Paginations(
+				pagination: await Helper.Paginations(
 					'sub_categories',
 					condition,
 					offset,

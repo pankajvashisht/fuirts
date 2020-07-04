@@ -16,6 +16,8 @@ module.exports = async (Request, res, next) => {
 	};
 	const non_required = {
 		device_type: Request.body.device_type,
+		paypal_email: Request.body.paypal_email || '',
+		stripe_id: Request.body.stripe_id || '',
 		taxes: Request.body.taxes,
 		service_fees: Request.body.service_fees,
 		device_token: Request.body.device_token,

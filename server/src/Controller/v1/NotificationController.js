@@ -1,7 +1,6 @@
-const ApiController = require('./ApiController');
+const { Helper } = require('./index');
 const Db = require('../../../libary/sqlBulider');
 const App = require('../../../libary/CommanMethod');
-const Apis = new ApiController();
 const DB = new Db();
 
 module.exports = {
@@ -44,7 +43,7 @@ module.exports = {
 		return {
 			message: App.Message('notification'),
 			data: {
-				pagination: await Apis.Paginations(
+				pagination: await Helper.Paginations(
 					'notifications',
 					condition,
 					offset,
@@ -68,7 +67,7 @@ module.exports = {
 		};
 		if (JSON.parse(monthly)) {
 			condition['conditions']['date'] = [
-				'from_unixtime(created, "%y%m")',
+				'from_unixtime(created, "%y%d%m")',
 				`from_unixtime(${app.currentTime}, "%y%d%m")`,
 			];
 		}
@@ -78,7 +77,7 @@ module.exports = {
 		return {
 			message: App.Message('earning'),
 			data: {
-				pagination: await Apis.Paginations(
+				pagination: await Helper.Paginations(
 					'amount_transfers',
 					condition,
 					offset,

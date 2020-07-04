@@ -1,9 +1,8 @@
 const { OrderEvent } = require('../../Events');
-const ApiController = require('./ApiController');
+const { Helper } = require('./index');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-const apis = new ApiController();
 const DB = new Db();
 module.exports = {
 	getShop: async (Request) => {
@@ -75,7 +74,7 @@ module.exports = {
 		return {
 			message: app.Message('shopListing'),
 			data: {
-				pagination: await apis.Paginations('users', condition, offset, limit),
+				pagination: await Helper.Paginations('users', condition, offset, limit),
 				result: app.addUrl(result, 'profile'),
 			},
 		};
@@ -123,7 +122,7 @@ module.exports = {
 			coupon_id: Request.body.coupon_id || 0,
 			status: 1,
 		};
-		const RequestData = await apis.vaildation(required, {});
+		const RequestData = await Helper.vaildation(required, {});
 		const {
 			product_id,
 			address_id,
@@ -169,7 +168,7 @@ module.exports = {
 				text: 'You have new order',
 				type: 1,
 			});
-			apis.sendPush(RequestData.shop_id, {
+			Helper.sendPush(RequestData.shop_id, {
 				message: 'You have new order',
 				data: productDetails,
 				notification_code: 1,
@@ -190,7 +189,7 @@ module.exports = {
 			payment_datials: Request.body.payment_datials,
 			status: Request.body.status, // 0 -> fail 1-> success
 		};
-		const RequestData = await apis.vaildation(required, {});
+		const RequestData = await Helper.vaildation(required, {});
 		const condition = {
 			conditions: {
 				id: RequestData.order_id,
@@ -211,7 +210,7 @@ module.exports = {
 			rating: Request.body.rating,
 			comment: Request.body.comment,
 		};
-		const RequestData = await apis.vaildation(required, {});
+		const RequestData = await Helper.vaildation(required, {});
 		const condition = {
 			conditions: {
 				id: RequestData.shop_id,
@@ -229,7 +228,7 @@ module.exports = {
 				text: pushMessage,
 				type: 2,
 			});
-			apis.sendPush(RequestData.shop_id, {
+			Helper.sendPush(RequestData.shop_id, {
 				message: pushMessage,
 				data: RequestData,
 				notification_code: 2,
@@ -313,7 +312,7 @@ module.exports = {
 			user_id: Request.body.user_id,
 			order_id: Request.body.order_id,
 		};
-		const RequestData = await apis.vaildation(required, {});
+		const RequestData = await Helper.vaildation(required, {});
 		const { order_id, user_id } = RequestData;
 		const orderInfo = await DB.find('orders', 'first', {
 			conditions: {
@@ -341,20 +340,22 @@ module.exports = {
 		const { order_status = 0, limit = 10 } = Request.query;
 		offset = (offset - 1) * limit;
 		const conditions = {};
-		if (parseInt(order_status) === 2 || parseInt(order_status) === 4) {
-			conditions['IN'] = {
-				order_status: [2, 4],
-			};
-		} else {
-			conditions['IN'] = {
-				order_status: [1, 2, 0],
-			};
-		}
 		if (user_type === 1) {
+			if (parseInt(order_status) === 2 || parseInt(order_status) === 4) {
+				conditions['IN'] = {
+					order_status: [2, 4],
+				};
+			} else {
+				conditions['IN'] = {
+					order_status: [1, 2, 0],
+				};
+			}
 			conditions['user_id'] = user_id;
 		} else if (user_type === 2) {
+			conditions['order_status'] = order_status;
 			conditions['shop_id'] = user_id;
 		} else {
+			conditions['order_status'] = order_status;
 			conditions['driver_id'] = user_id;
 		}
 		const condition = {
@@ -401,7 +402,12 @@ module.exports = {
 		return {
 			message: app.Message('orderListing'),
 			data: {
-				pagination: await apis.Paginations('orders', condition, offset, limit),
+				pagination: await Helper.Paginations(
+					'orders',
+					condition,
+					offset,
+					limit
+				),
 				result: app.addUrl(final, ['profile', 'shop_profile']),
 			},
 		};

@@ -1,9 +1,8 @@
-const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
+const { Helper } = require('./index');
 const app = require('../../../libary/CommanMethod');
 const ApiError = require('../../Exceptions/ApiError');
-let apis = new ApiController();
-let DB = new Db();
+const DB = new Db();
 
 module.exports = {
 	getProduct: async (Request) => {
@@ -57,7 +56,7 @@ module.exports = {
 		return {
 			message: app.Message('ProductListing'),
 			data: {
-				pagination: await apis.Paginations(
+				pagination: await Helper.Paginations(
 					'products',
 					condition,
 					offset,
@@ -104,7 +103,7 @@ module.exports = {
 		return {
 			message: app.Message('ProductListing'),
 			data: {
-				pagination: await apis.Paginations(
+				pagination: await Helper.Paginations(
 					'favourite_products',
 					condition,
 					offset,
@@ -119,7 +118,7 @@ module.exports = {
 			user_id: Request.body.user_id,
 			product_id: Request.body.product_id,
 		};
-		const requestData = await apis.vaildation(required, {});
+		const requestData = await Helper.vaildation(required, {});
 		const { user_id, product_id } = requestData;
 		const productInfo = await DB.find('products', 'first', {
 			conditions: {
@@ -191,7 +190,7 @@ module.exports = {
 		return {
 			message: app.Message('ProductListing'),
 			data: {
-				pagination: await apis.Paginations(
+				pagination: await Helper.Paginations(
 					'products',
 					condition,
 					offset,
@@ -216,7 +215,7 @@ module.exports = {
 			user_id: Request.body.user_id,
 			is_feature: Request.body.is_feature || 0,
 		};
-		const requestData = await apis.vaildation(required, {});
+		const requestData = await Helper.vaildation(required, {});
 		const categoryInfo = await DB.find('categories', 'first', {
 			conditions: {
 				id: requestData.category_id,
@@ -279,7 +278,7 @@ module.exports = {
 			is_feature: Request.body.is_feature,
 			user_id: Request.body.user_id,
 		};
-		const requestData = await apis.vaildation(required, nonRequired);
+		const requestData = await Helper.vaildation(required, nonRequired);
 		const product_info = await DB.find('products', 'first', {
 			conditions: {
 				user_id: requestData.user_id,
@@ -302,7 +301,7 @@ module.exports = {
 			product_id: Request.body.product_id,
 			user_id: Request.body.user_id,
 		};
-		const requestData = await apis.vaildation(required, {});
+		const requestData = await Helper.vaildation(required, {});
 		const product_info = await DB.find('products', 'first', {
 			conditions: {
 				user_id: requestData.user_id,
@@ -322,7 +321,7 @@ module.exports = {
 			shop_id: Request.body.user_id,
 			order_status: Request.body.order_status,
 		};
-		const requestData = await apis.vaildation(required, {});
+		const requestData = await Helper.vaildation(required, {});
 		const order_info = await DB.find('orders', 'first', {
 			conditions: {
 				shop_id: requestData.shop_id,
@@ -360,13 +359,13 @@ module.exports = {
 		}
 		DB.save('orders', updateOrderStatus);
 		setTimeout(() => {
-			apis.sendPush(order_info.user_id, {
+			Helper.sendPush(order_info.user_id, {
 				message: pushMessage,
 				data: order_info,
 				notification_code: 3,
 			});
 			if (requestData.driver_id) {
-				apis.sendPush(requestData.driver_id, {
+				Helper.sendPush(requestData.driver_id, {
 					message: `you have new order to deliver`,
 					data: order_info,
 					notification_code: 4,

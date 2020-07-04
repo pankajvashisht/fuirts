@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const { lang } = require('../../../config');
+const { shopRecord } = require('./OrderController');
 const App = require('../../../libary/CommanMethod');
 const DB = new Db();
 
@@ -169,7 +170,8 @@ class ApiController {
 				'delivery_charges',
 				'app_category_id',
 				'min_order',
-				'strip_id',
+				'paypal_email',
+				'stripe_id',
 				'opening_hours',
 				'card_informations',
 				'language',
@@ -182,6 +184,9 @@ class ApiController {
 		}
 		if (result.opening_hours) {
 			result.opening_hours = JSON.parse(result.opening_hours);
+		}
+		if (result.user_type === 2) {
+			result.orderRecord = await shopRecord(result.id);
 		}
 		return result;
 	}

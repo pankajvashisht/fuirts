@@ -237,4 +237,17 @@ module.exports = {
 	Message(message) {
 		return lang[_Lang][message] || 'something batter';
 	},
+	get currentMonthFirstDate() {
+		const date = new Date();
+		return Math.round(
+			new Date(date.getFullYear(), date.getMonth(), 1).getTime() / 1000,
+			0
+		);
+	},
+	get currentWeekFirstDate() {
+		const date = new Date();
+		var day = date.getDay(),
+			diff = date.getDate() - day + (day == 0 ? -6 : 1);
+		return Math.round(new Date(d.setDate(diff)).getTime() / 1000, 0);
+	},
 };

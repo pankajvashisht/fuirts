@@ -1,8 +1,7 @@
-const ApiController = require('./ApiController');
+const { Helper } = require('./index');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const App = require('../../../libary/CommanMethod');
-const Apis = new ApiController();
 const DB = new Db();
 
 module.exports = {
@@ -17,7 +16,7 @@ module.exports = {
 			user_id: Request.body.user_id,
 			is_default: Request.body.is_default,
 		};
-		const requestData = await Apis.vaildation(required, {
+		const requestData = await Helper.vaildation(required, {
 			address_line_two: Request.body.address_line_two || '',
 		});
 		requestData.id = await DB.save('user_addresses', requestData);
@@ -37,7 +36,7 @@ module.exports = {
 			address_id: Request.body.address_id,
 			user_id: Request.body.user_id,
 		};
-		const requestData = await Apis.vaildation(required, {});
+		const requestData = await Helper.vaildation(required, {});
 		const { address_id, user_id } = requestData;
 		const addressInfo = await addressDetails(address_id, user_id);
 		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress'), 422);
@@ -67,7 +66,7 @@ module.exports = {
 			is_default: Request.body.is_default,
 			address_line_two: Request.body.address_line_two,
 		};
-		const requestData = await Apis.vaildation(required, nonRequired);
+		const requestData = await Helper.vaildation(required, nonRequired);
 		const { address_id, user_id, is_default = 0 } = requestData;
 		const addressInfo = await addressDetails(address_id, user_id);
 		if (!addressInfo) throw new ApiError(App.Message('InvaildAddress'), 422);
@@ -122,7 +121,7 @@ module.exports = {
 		return {
 			message: App.Message('addressList'),
 			data: {
-				pagination: await Apis.Paginations(
+				pagination: await Helper.Paginations(
 					'user_addresses',
 					condition,
 					offset,
