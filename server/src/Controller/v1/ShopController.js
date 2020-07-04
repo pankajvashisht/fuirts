@@ -1,9 +1,10 @@
 const { OrderEvent } = require('../../Events');
-const { Helper } = require('./index');
+const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
 const DB = new Db();
+const Helper = new ApiController();
 module.exports = {
 	getShop: async (Request) => {
 		let offset = Request.query.offset || 1;

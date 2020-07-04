@@ -1,11 +1,12 @@
 const Db = require('../../../libary/sqlBulider');
-const { Helper } = require('./index');
+const ApiController = require('./ApiController');
 const {
 	currentTime,
 	currentMonthFirstDate,
 	currentWeekFirstDate,
 } = require('../../../libary/CommanMethod');
 const DB = new Db();
+const Helper = new ApiController();
 
 const orderDetails = async (orderId) => {
 	const result = await DB.find('orders', 'first', {

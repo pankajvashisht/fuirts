@@ -1,9 +1,9 @@
 const Db = require('../../../libary/sqlBulider');
-const { Helper } = require('./index');
+const ApiController = require('./ApiController');
 const app = require('../../../libary/CommanMethod');
 const ApiError = require('../../Exceptions/ApiError');
 const DB = new Db();
-
+const Helper = new ApiController();
 module.exports = {
 	getProduct: async (Request) => {
 		let offset = Request.query.offset || 1;

@@ -1,8 +1,8 @@
-const { Helper } = require('./index');
+const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const App = require('../../../libary/CommanMethod');
 const DB = new Db();
-
+const Helper = new ApiController();
 module.exports = {
 	getNotification: async (Request) => {
 		let offset = Request.query.offset || 1;
