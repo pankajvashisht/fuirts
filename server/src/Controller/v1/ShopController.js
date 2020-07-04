@@ -353,7 +353,14 @@ module.exports = {
 			}
 			conditions['user_id'] = user_id;
 		} else if (user_type === 2) {
-			conditions['order_status'] = order_status;
+			if (parseInt(order_status) === 0 || parseInt(order_status) === 1) {
+				conditions['IN'] = {
+					order_status: [0, 1],
+				};
+			} else {
+				conditions['order_status'] = order_status;
+			}
+
 			conditions['shop_id'] = user_id;
 		} else {
 			conditions['order_status'] = order_status;
