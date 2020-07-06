@@ -152,7 +152,7 @@ module.exports = {
 	},
 	oauthConnect: async (Request) => {
 		const { code, id } = Request.query;
-		console.log(id);
+		const { id } = Request.params;
 		const result = await stripe.oauth.token({
 			grant_type: 'authorization_code',
 			code,
@@ -165,6 +165,7 @@ module.exports = {
 		}
 		return {
 			message: 'Connceted successfully',
+			stripe_id: result.stripe_user_id,
 		};
 	},
 	createStripeSecert: async (Request) => {
