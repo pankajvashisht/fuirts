@@ -151,14 +151,14 @@ module.exports = {
 		}
 	},
 	oauthConnect: async (Request) => {
-		const { code, id } = Request.query;
+		const { code, state } = Request.query;
 		const result = await stripe.oauth.token({
 			grant_type: 'authorization_code',
 			code,
 		});
 		if (result.stripe_user_id) {
 			await DB.save('users', {
-				id,
+				id: state,
 				stripe_id: result.stripe_user_id,
 			});
 		}
