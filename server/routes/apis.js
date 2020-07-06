@@ -8,6 +8,7 @@ const {
 	CategoryController,
 	AddressController,
 	NotificationController,
+	PaymentController,
 } = require('../src/Controller/v1/index');
 const { userSignup } = require('../src/Request');
 const {
@@ -104,5 +105,9 @@ router
 	.get(Apiresponse(ProductController.favoriteProducts))
 	.post(Apiresponse(ProductController.doFavourite))
 	.delete(Apiresponse(ProductController.doFavourite));
-
+router.post(
+	'/stripe-secert-key',
+	Apiresponse(PaymentController.createStripeSecert)
+);
+router.get('/stripe-conncet', Apiresponse(PaymentController.oauthConnect));
 module.exports = router;
