@@ -109,10 +109,7 @@ router.post(
 	'/stripe-secert-key',
 	Apiresponse(PaymentController.createStripeSecert)
 );
-router.get(
-	'/stripe-connect/:id([0-9]+)',
-	Apiresponse(PaymentController.oauthConnect)
-);
+router.get('/stripe-connect', Apiresponse(PaymentController.oauthConnect));
 router.get(
 	'/stripe-account-activate',
 	Apiresponse(PaymentController.stripeAccountActive)

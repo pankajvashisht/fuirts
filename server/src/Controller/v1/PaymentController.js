@@ -151,8 +151,8 @@ module.exports = {
 		}
 	},
 	oauthConnect: async (Request) => {
-		const { code } = Request.query;
-		const { id } = Request.params;
+		const { code, id } = Request.query;
+		console.log(id);
 		const result = await stripe.oauth.token({
 			grant_type: 'authorization_code',
 			code,
