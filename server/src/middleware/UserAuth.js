@@ -33,6 +33,7 @@ const UserAuth = async (req, res, next) => {
 				'longitude',
 				'password',
 				'otp',
+				'stripe_id',
 			],
 		});
 		if (user_details) {

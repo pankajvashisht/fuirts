@@ -110,4 +110,8 @@ router.post(
 	Apiresponse(PaymentController.createStripeSecert)
 );
 router.get('/stripe-connect', Apiresponse(PaymentController.oauthConnect));
+router.get(
+	'/stripe-account-activate',
+	Apiresponse(PaymentController.stripeAccountActive)
+);
 module.exports = router;

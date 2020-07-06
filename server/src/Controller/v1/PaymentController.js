@@ -95,6 +95,27 @@ module.exports = {
 			},
 		});
 	},
+	stripeAccountActive: async (Request) => {
+		const { stripe_id, id } = Request.body.userInfo;
+		const accountInfo = await stripe.accounts.retrieve(stripe_id);
+		const {
+			capabilities: { card_payments, transfers },
+		} = accountInfo;
+		let account = false;
+		if (card_payments === 'active' && transfers === 'active') {
+			await DB.save('users', {
+				id,
+				stripe_connect: true,
+			});
+			account = true;
+		}
+		return {
+			message: 'Account info',
+			data: {
+				account,
+			},
+		};
+	},
 	stripeAccountLink: async (Request) => {
 		const {
 			user_id,

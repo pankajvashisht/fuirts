@@ -177,6 +177,7 @@ class ApiController {
 				'language',
 				'notification_on',
 				'order_notification',
+				'stripe_connect',
 			],
 		});
 		if (result.card_informations) {
