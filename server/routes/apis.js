@@ -109,5 +109,5 @@ router.post(
 	'/stripe-secert-key',
 	Apiresponse(PaymentController.createStripeSecert)
 );
-router.get('/stripe-conncet', Apiresponse(PaymentController.oauthConnect));
+router.get('/stripe-connect', Apiresponse(PaymentController.oauthConnect));
 module.exports = router;
