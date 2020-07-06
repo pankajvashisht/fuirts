@@ -150,26 +150,36 @@ module.exports = {
 		}
 	},
 	oauthConnect: async (Request) => {
-		const { code, state } = Request.query;
+		const { code } = Request.query;
+		const { id } = Request.params;
 		const result = await stripe.oauth.token({
 			grant_type: 'authorization_code',
 			code,
 		});
+		if (result.stripe_user_id) {
+			await DB.save('users', {
+				id,
+				stripe_id: result.stripe_user_id,
+			});
+		}
 		return {
 			message: 'Connceted successfully',
-			data: {
-				stripe_id: result.stripe_user_id,
-			},
 		};
 	},
 	createStripeSecert: async (Request) => {
 		const {
 			amount = 0,
 			order_id,
-			shop_stripe_id,
+			shop_id,
 			application_fee_amount = 10,
 		} = Request.body;
 		if (amount === 0) throw new ApiError('Amount field is required', 400);
+		const { stripe_id, user_type } = await DB.find('users', 'first', {
+			conditions: {
+				id: shop_id,
+			},
+			fields: ['stripe_id', 'user_type'],
+		});
 		try {
 			const paymentIntent = await stripe.paymentIntents.create({
 				amount,
@@ -177,10 +187,17 @@ module.exports = {
 				transfer_group: order_id,
 				application_fee_amount,
 				transfer_data: {
-					destination: shop_stripe_id,
+					destination: stripe_id,
 				},
 			});
 			const clientSecret = paymentIntent.client_secret;
+			await DB.save('amount_transfers', {
+				user_id: shop_id,
+				user_type,
+				checkout_status: 1,
+				order_id,
+				amount: amount - application_fee_amount,
+			});
 			return {
 				message: 'Stripe Secert Key',
 				data: {
