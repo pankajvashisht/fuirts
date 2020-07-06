@@ -121,6 +121,7 @@ module.exports = {
 			order_date: Request.body.order_date || app.currentTime,
 			discout: Request.body.discout || 0,
 			coupon_id: Request.body.coupon_id || 0,
+			payment_datials: Request.body.payment_datials || {},
 			status: 1,
 		};
 		const RequestData = await Helper.vaildation(required, {});

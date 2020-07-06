@@ -113,6 +113,7 @@ module.exports = {
 			message: 'Account info',
 			data: {
 				account,
+				accountInfo,
 			},
 		};
 	},
