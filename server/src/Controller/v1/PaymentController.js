@@ -203,6 +203,7 @@ module.exports = {
 				message: 'Stripe Secert Key',
 				data: {
 					secret: clientSecret,
+					stripe_id,
 				},
 			};
 		} catch (err) {
