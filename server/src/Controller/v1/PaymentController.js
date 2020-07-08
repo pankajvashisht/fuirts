@@ -168,54 +168,19 @@ module.exports = {
 		};
 	},
 	createStripeSecert: async (Request) => {
-		const {
-			amount = 0,
-			order_id,
-			shop_id,
-			application_fee_amount = 10,
-			currency = 'usd',
-		} = Request.body;
+		const { amount = 0, order_id, currency = 'usd' } = Request.body;
 		if (amount === 0) throw new ApiError('Amount field is required', 400);
-		const { stripe_id, user_type } = await DB.find('users', 'first', {
-			conditions: {
-				id: shop_id,
-			},
-			fields: ['stripe_id', 'user_type'],
-		});
 		try {
 			const paymentIntent = await stripe.paymentIntents.create({
 				amount,
 				currency,
-				//description: 'Software development services',
-				// shipping: {
-				// 	name: 'Jenny Rosen',
-				// 	address: {
-				// 		line1: '510 Townsend St',
-				// 		postal_code: '98140',
-				// 		city: 'San Francisco',
-				// 		state: 'CA',
-				// 		country: 'US',
-				// 	},
-				// },
 				transfer_group: order_id,
-				//application_fee_amount,
-				// transfer_data: {
-				// 	destination: stripe_id,
-				// },
 			});
 			const clientSecret = paymentIntent.client_secret;
-			await DB.save('amount_transfers', {
-				user_id: shop_id,
-				user_type,
-				checkout_status: 1,
-				order_id,
-				amount: amount - application_fee_amount,
-			});
 			return {
 				message: 'Stripe Secert Key',
 				data: {
 					secret: clientSecret,
-					stripe_id,
 				},
 			};
 		} catch (err) {
@@ -259,24 +224,38 @@ module.exports = {
 			throw new ApiError(err, 400);
 		}
 	},
-	transfersAmount: (destination, amount, orderID) => {
+	transfersAmount: ({
+		destination,
+		amount,
+		order_id,
+		shop_id,
+		user_type,
+		application_fee_amount = 10,
+	}) => {
 		return new Promise((Resolved, Reject) => {
 			stripe.transfers.create(
 				{
 					amount,
 					currency: 'usd',
 					destination,
-					transfer_group: orderID,
+					transfer_group: order_id,
 				},
-				function (err, transfer) {
+				function async(err, transfer) {
 					if (err) {
 						DB.save('strips_fail_logs', {
 							informations: JSON.stringify(err),
-							user_id: orderID,
+							user_id: shop_id,
 							type: 6,
 						});
 						Reject(err);
 					} else {
+						DB.save('amount_transfers', {
+							user_id: shop_id,
+							user_type,
+							checkout_status: 1,
+							order_id,
+							amount: amount - application_fee_amount,
+						});
 						Resolved(transfer);
 					}
 				}

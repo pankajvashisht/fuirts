@@ -3,6 +3,7 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
+const PaymentController = require('./PaymentController');
 const DB = new Db();
 const Helper = new ApiController();
 module.exports = {
@@ -121,7 +122,7 @@ module.exports = {
 			order_date: Request.body.order_date || app.currentTime,
 			discout: Request.body.discout || 0,
 			coupon_id: Request.body.coupon_id || 0,
-			payment_datials: Request.body.payment_datials || {},
+			payment_details: Request.body.payment_details || {},
 			status: 1,
 		};
 		const RequestData = await Helper.vaildation(required, {});
@@ -163,19 +164,7 @@ module.exports = {
 		RequestData.order_id = await DB.save('orders', RequestData);
 		productDetails['order_id'] = RequestData.order_id;
 		setTimeout(() => {
-			saveNotification({
-				user_id: RequestData.user_id,
-				shop_id: RequestData.shop_id,
-				order_id: RequestData.order_id,
-				text: 'You have new order',
-				type: 1,
-			});
-			Helper.sendPush(RequestData.shop_id, {
-				message: 'You have new order',
-				data: productDetails,
-				notification_code: 1,
-			});
-			OrderEvent.emit('orderSuccess', RequestData.shop_id, RequestData);
+			pushSend(RequestData, productDetails);
 		}, 100);
 		RequestData.product_details = JSON.parse(RequestData.product_details);
 		RequestData.address_details = JSON.parse(RequestData.address_details);
@@ -313,6 +302,7 @@ module.exports = {
 		const required = {
 			user_id: Request.body.user_id,
 			order_id: Request.body.order_id,
+			payment_details: Request.body.payment_details || {},
 		};
 		const RequestData = await Helper.vaildation(required, {});
 		const { order_id, user_id } = RequestData;
@@ -326,24 +316,13 @@ module.exports = {
 		delete orderInfo.id;
 		delete orderInfo.coupon_id;
 		delete orderInfo.coupon_details;
+		orderInfo.payment_details = RequestData.payment_details;
 		orderInfo.order_date = app.currentTime;
 		orderInfo.created = app.currentTime;
 		orderInfo.modified = app.currentTime;
 		orderInfo.order_id = await DB.save('orders', orderInfo);
 		setTimeout(() => {
-			saveNotification({
-				user_id: orderInfo.user_id,
-				shop_id: orderInfo.shop_id,
-				order_id: orderInfo.order_id,
-				text: 'You have new order',
-				type: 1,
-			});
-			Helper.sendPush(orderInfo.shop_id, {
-				message: 'You have new order',
-				data: JSON.parse(orderInfo.product_details),
-				notification_code: 1,
-			});
-			OrderEvent.emit('orderSuccess', orderInfo.shop_id, orderInfo);
+			pushSend(orderInfo, JSON.parse(orderInfo.product_details));
 		}, 100);
 		return {
 			message: app.Message('orderSuccess'),
@@ -538,6 +517,36 @@ const updateProduct = async (product, qyt) => {
 			stock: value.stock - totalQty[key],
 		});
 	});
+};
+
+const pushSend = async (RequestData, productDetails) => {
+	const { user_id, shop_id, order_id } = RequestData;
+	saveNotification({
+		user_id,
+		shop_id,
+		order_id,
+		text: 'You have new order',
+		type: 1,
+	});
+	const { stripe_id, user_type } = await DB.find('users', 'first', {
+		conditions: {
+			id: shop_id,
+		},
+		fields: ['stripe_id', 'user_type'],
+	});
+	PaymentController.transfersAmount({
+		destination: stripe_id,
+		amount: price,
+		user_type,
+		shop_id,
+		order_id,
+	});
+	Helper.sendPush(shop_id, {
+		message: 'You have new order',
+		data: productDetails,
+		notification_code: 1,
+	});
+	OrderEvent.emit('orderSuccess', shop_id, RequestData);
 };
 
 const saveNotification = async (data) => {
