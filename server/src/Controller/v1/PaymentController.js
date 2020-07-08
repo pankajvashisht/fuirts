@@ -173,7 +173,7 @@ module.exports = {
 			order_id,
 			shop_id,
 			application_fee_amount = 10,
-			currency = 'inr',
+			currency = 'usd',
 		} = Request.body;
 		if (amount === 0) throw new ApiError('Amount field is required', 400);
 		const { stripe_id, user_type } = await DB.find('users', 'first', {
@@ -185,7 +185,7 @@ module.exports = {
 		try {
 			const paymentIntent = await stripe.paymentIntents.create({
 				amount,
-				currency: 'usd',
+				currency,
 				shipping: {
 					name: 'Jenny Rosen',
 					address: {
