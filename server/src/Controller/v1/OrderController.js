@@ -69,6 +69,14 @@ const saveNotification = async (status, result) => {
 		case 2:
 			text = 'Your order rejected by shop';
 			type = 4;
+			break;
+		case 3:
+			text = 'Your order on the way';
+			type = 5;
+			break;
+		case 4:
+			text = 'Your order successfully delivered';
+			type = 6;
 			const { stripe_id, user_type } = await DB.find('users', 'first', {
 				conditions: {
 					id: shop_id,
@@ -82,14 +90,6 @@ const saveNotification = async (status, result) => {
 				shop_id,
 				order_id: id,
 			});
-			break;
-		case 3:
-			text = 'Your order on the way';
-			type = 5;
-			break;
-		case 4:
-			text = 'Your order successfully delivered';
-			type = 6;
 			break;
 		default:
 			text = 'Your order accepted by shop';
