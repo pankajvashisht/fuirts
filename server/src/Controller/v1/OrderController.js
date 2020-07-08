@@ -58,7 +58,7 @@ const updateOrder = async (data) => {
 };
 
 const saveNotification = async (status, result) => {
-	const { user_id, shop_id, id, price } = result;
+	const { user_id, shop_id, order_date, price, id } = result;
 	let text = '';
 	let type = 3;
 	switch (status) {
@@ -89,6 +89,7 @@ const saveNotification = async (status, result) => {
 				user_type,
 				shop_id,
 				order_id: id,
+				order_date,
 			});
 			break;
 		default:

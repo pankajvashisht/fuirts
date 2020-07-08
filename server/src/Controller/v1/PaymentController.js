@@ -228,6 +228,7 @@ module.exports = {
 		destination,
 		amount,
 		order_id,
+		order_date,
 		shop_id,
 		user_type,
 		application_fee_amount = 10,
@@ -238,7 +239,7 @@ module.exports = {
 					amount,
 					currency: 'usd',
 					destination,
-					transfer_group: order_id,
+					transfer_group: order_date,
 				},
 				function async(err, transfer) {
 					if (err) {
