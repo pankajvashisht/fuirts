@@ -3,7 +3,6 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-const PaymentController = require('./PaymentController');
 const DB = new Db();
 const Helper = new ApiController();
 module.exports = {
@@ -123,6 +122,7 @@ module.exports = {
 			discout: Request.body.discout || 0,
 			coupon_id: Request.body.coupon_id || 0,
 			payment_details: Request.body.payment_details || {},
+			order_otp: app.randomNumber(),
 			status: 1,
 		};
 		const RequestData = await Helper.vaildation(required, {});
@@ -302,6 +302,7 @@ module.exports = {
 			user_id: Request.body.user_id,
 			order_id: Request.body.order_id,
 			payment_details: Request.body.payment_details || {},
+			order_otp: app.randomNumber(),
 		};
 		const RequestData = await Helper.vaildation(required, {});
 		const { order_id, user_id } = RequestData;
@@ -315,6 +316,7 @@ module.exports = {
 		delete orderInfo.id;
 		delete orderInfo.coupon_id;
 		delete orderInfo.coupon_details;
+		orderInfo.order_otp = RequestData.order_otp;
 		orderInfo.payment_details = RequestData.payment_details;
 		orderInfo.order_date = app.currentTime;
 		orderInfo.created = app.currentTime;
@@ -518,7 +520,7 @@ const updateProduct = async (product, qyt) => {
 	});
 };
 
-const pushSend = async (RequestData, productDetails) => {
+const pushSend = (RequestData, productDetails) => {
 	const { user_id, shop_id, order_id } = RequestData;
 	saveNotification({
 		user_id,
@@ -526,19 +528,6 @@ const pushSend = async (RequestData, productDetails) => {
 		order_id,
 		text: 'You have new order',
 		type: 1,
-	});
-	const { stripe_id, user_type } = await DB.find('users', 'first', {
-		conditions: {
-			id: shop_id,
-		},
-		fields: ['stripe_id', 'user_type'],
-	});
-	PaymentController.transfersAmount({
-		destination: stripe_id,
-		amount: price,
-		user_type,
-		shop_id,
-		order_id,
 	});
 	Helper.sendPush(shop_id, {
 		message: 'You have new order',

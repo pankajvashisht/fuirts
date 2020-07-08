@@ -4,6 +4,7 @@ const {
 	currentMonthFirstDate,
 	currentWeekFirstDate,
 } = require('../../../libary/CommanMethod');
+const PaymentController = require('./PaymentController');
 const DB = new Db();
 
 const orderDetails = async (orderId) => {
@@ -54,6 +55,7 @@ const updateOrder = async (data) => {
 };
 
 const saveNotification = async (status, result) => {
+	const { user_id, shop_id, id, price } = result;
 	let text = '';
 	let type = 3;
 	switch (status) {
@@ -64,6 +66,19 @@ const saveNotification = async (status, result) => {
 		case 2:
 			text = 'Your order rejected by shop';
 			type = 4;
+			const { stripe_id, user_type } = await DB.find('users', 'first', {
+				conditions: {
+					id: shop_id,
+				},
+				fields: ['stripe_id', 'user_type'],
+			});
+			PaymentController.transfersAmount({
+				destination: stripe_id,
+				amount: price,
+				user_type,
+				shop_id,
+				order_id: id,
+			});
 			break;
 		case 3:
 			text = 'Your order on the way';
@@ -78,7 +93,6 @@ const saveNotification = async (status, result) => {
 			type = 3;
 			break;
 	}
-	const { user_id, shop_id } = result;
 	const notificationObject = {
 		user_id,
 		shop_id,
@@ -90,7 +104,6 @@ const saveNotification = async (status, result) => {
 	Object.assign(notificationObject, {
 		message: text,
 	});
-	//Helper.sendPush(user_id, notificationObjectm);
 	return {
 		user_id,
 		notificationObject,
