@@ -198,7 +198,7 @@ module.exports = {
 				// 	},
 				// },
 				transfer_group: order_id,
-				application_fee_amount,
+				//application_fee_amount,
 				// transfer_data: {
 				// 	destination: stripe_id,
 				// },
