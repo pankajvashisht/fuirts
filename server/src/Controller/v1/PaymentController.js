@@ -120,7 +120,7 @@ module.exports = {
 	stripeAccountLink: async (Request) => {
 		const {
 			user_id,
-			userInfo: { strip_id = '' },
+			userInfo: { stripe_id = '' },
 		} = Request.body;
 		if (!strip_id)
 			throw new ApiError(
@@ -131,9 +131,9 @@ module.exports = {
 			const Links = await new Promise((Resolve, Reject) => {
 				stripe.accountLinks.create(
 					{
-						account: strip_id,
-						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=fail&stripe_id=${strip_id}`,
-						success_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=success&stripe_id=${strip_id}`,
+						account: stripe_id,
+						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=fail&stripe_id=${stripe_id}`,
+						success_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=success&stripe_id=${stripe_id}`,
 						type: 'custom_account_verification',
 					},
 					function (err, accountLink) {
@@ -182,17 +182,15 @@ module.exports = {
 			fields: ['stripe_id', 'user_type'],
 		});
 		try {
-			const paymentIntent = await stripe.paymentIntents.create(
-				{
-					payment_method_types: ['card'],
-					amount,
-					currency: 'usd',
-					application_fee_amount,
+			const paymentIntent = await stripe.paymentIntents.create({
+				amount,
+				currency: 'usd',
+				transfer_group: order_id,
+				application_fee_amount,
+				transfer_data: {
+					destination: stripe_id,
 				},
-				{
-					stripeAccount: stripe_id,
-				}
-			);
+			});
 			const clientSecret = paymentIntent.client_secret;
 			await DB.save('amount_transfers', {
 				user_id: shop_id,

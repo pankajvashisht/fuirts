@@ -204,6 +204,44 @@ class UserController extends ApiController {
 			data: [],
 		};
 	}
+
+	async updateBankAccount(Request) {
+		const required = {
+			routing_number: Request.body.routing_number,
+			account_number: Request.body.account_number,
+			account_holder_name: Request.body.account_holder_name,
+		};
+		const requestData = await super.vaildation(required, {});
+		const { routing_number, account_number, account_holder_name } = requestData;
+		const { id, strip_id, stripe_bank_account_id } = Request.body.userInfo;
+		await PaymentController.updateBank({
+			bankDetails: {
+				routing_number,
+				account_number,
+				account_holder_name,
+			},
+			strip_id,
+			stripe_bank_account_id,
+			userID: id,
+		});
+		await DB.save('users', {
+			id,
+			card_informations: JSON.stringify({
+				routing_number,
+				account_number,
+				account_holder_name,
+			}),
+		});
+		const usersinfo = await super.userDetails(id);
+		if (usersinfo.profile.length > 0) {
+			usersinfo.profile = appURL + 'uploads/' + usersinfo.profile;
+		}
+		return {
+			message: 'Bank account details Updated',
+			data: usersinfo,
+		};
+	}
+
 	async updateProfile(req) {
 		const required = {
 			id: req.body.user_id,
@@ -299,6 +337,6 @@ const paymentRegister = (RequestData, user_id) => {
 		user_id,
 	});
 	if (parseInt(user_type) !== 0) {
-		//PaymentController.createAccount(user_id, email, card_informations);
+		PaymentController.createAccount(user_id, email, card_informations);
 	}
 };

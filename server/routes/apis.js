@@ -111,7 +111,16 @@ router.post(
 );
 router.get('/stripe-connect', Apiresponse(PaymentController.oauthConnect));
 router.get(
+	'/stripe-link-account',
+	Apiresponse(PaymentController.stripeAccountLink)
+);
+router.get(
 	'/stripe-account-activate',
 	Apiresponse(PaymentController.stripeAccountActive)
 );
+router
+	.route('/stripe-integration/:user_id([0-9]+)')
+	.get(PaymentController.stripeHook)
+	.post(PaymentController.stripeHook);
+router.put('/user/bank-account-update', Apiresponse(user.updateBankAccount));
 module.exports = router;
