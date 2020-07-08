@@ -173,6 +173,7 @@ module.exports = {
 			order_id,
 			shop_id,
 			application_fee_amount = 10,
+			currency = 'inr',
 		} = Request.body;
 		if (amount === 0) throw new ApiError('Amount field is required', 400);
 		const { stripe_id, user_type } = await DB.find('users', 'first', {
@@ -185,6 +186,16 @@ module.exports = {
 			const paymentIntent = await stripe.paymentIntents.create({
 				amount,
 				currency: 'usd',
+				shipping: {
+					name: 'Jenny Rosen',
+					address: {
+						line1: '510 Townsend St',
+						postal_code: '98140',
+						city: 'San Francisco',
+						state: 'CA',
+						country: 'US',
+					},
+				},
 				transfer_group: order_id,
 				application_fee_amount,
 				transfer_data: {
