@@ -182,15 +182,17 @@ module.exports = {
 			fields: ['stripe_id', 'user_type'],
 		});
 		try {
-			const paymentIntent = await stripe.paymentIntents.create({
-				amount,
-				currency: 'usd',
-				transfer_group: order_id,
-				application_fee_amount,
-				transfer_data: {
-					destination: stripe_id,
+			const paymentIntent = await stripe.paymentIntents.create(
+				{
+					payment_method_types: ['card'],
+					amount,
+					currency: 'usd',
+					application_fee_amount,
 				},
-			});
+				{
+					stripeAccount: stripe_id,
+				}
+			);
 			const clientSecret = paymentIntent.client_secret;
 			await DB.save('amount_transfers', {
 				user_id: shop_id,
