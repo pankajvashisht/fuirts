@@ -143,6 +143,7 @@ module.exports = {
 				user_id,
 			},
 		});
+		if (!addressDetails) throw new ApiError(app.Message('productInvaild'), 422);
 		if (parseInt(coupon_id) !== 0) {
 			const couponDetails = await DB.find('coupons', 'first', {
 				conditions: {
@@ -153,8 +154,6 @@ module.exports = {
 			if (!couponDetails) throw new ApiError(app.Message('coupenInvaild'), 422);
 			RequestData.coupon_details = JSON.stringify(couponDetails);
 		}
-
-		if (!addressDetails) throw new ApiError(app.Message('productInvaild'), 422);
 		RequestData.shop_id = productDetails[0].user_id;
 		RequestData.product_details = JSON.stringify(productDetails);
 		RequestData.price = price;
