@@ -401,6 +401,9 @@ module.exports = {
 			if (value.address_details) {
 				value.address_details = JSON.parse(value.address_details);
 			}
+			if (value.payment_details) {
+				value.payment_details = JSON.parse(value.payment_details);
+			}
 			return value;
 		});
 		return {
@@ -468,6 +471,9 @@ module.exports = {
 			}
 			if (value.address_details) {
 				value.address_details = JSON.parse(value.address_details);
+			}
+			if (value.payment_details) {
+				value.payment_details = JSON.parse(value.payment_details);
 			}
 			return value;
 		});

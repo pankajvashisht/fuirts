@@ -45,6 +45,9 @@ const orderDetails = async (orderId) => {
 		if (result.address_details) {
 			result.address_details = JSON.parse(result.address_details);
 		}
+		if (result.payment_details) {
+			result.payment_details = JSON.parse(result.payment_details);
+		}
 		return result;
 	}
 	return false;
