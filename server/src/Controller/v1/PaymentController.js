@@ -186,22 +186,22 @@ module.exports = {
 			const paymentIntent = await stripe.paymentIntents.create({
 				amount,
 				currency,
-				description: 'Software development services',
-				shipping: {
-					name: 'Jenny Rosen',
-					address: {
-						line1: '510 Townsend St',
-						postal_code: '98140',
-						city: 'San Francisco',
-						state: 'CA',
-						country: 'US',
-					},
-				},
+				//description: 'Software development services',
+				// shipping: {
+				// 	name: 'Jenny Rosen',
+				// 	address: {
+				// 		line1: '510 Townsend St',
+				// 		postal_code: '98140',
+				// 		city: 'San Francisco',
+				// 		state: 'CA',
+				// 		country: 'US',
+				// 	},
+				// },
 				transfer_group: order_id,
 				application_fee_amount,
-				transfer_data: {
-					destination: stripe_id,
-				},
+				// transfer_data: {
+				// 	destination: stripe_id,
+				// },
 			});
 			const clientSecret = paymentIntent.client_secret;
 			await DB.save('amount_transfers', {
