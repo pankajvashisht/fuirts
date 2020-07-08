@@ -99,10 +99,10 @@ module.exports = {
 		const { stripe_id, id } = Request.body.userInfo;
 		const accountInfo = await stripe.accounts.retrieve(stripe_id);
 		const {
-			capabilities: { card_payments, transfers },
+			capabilities: { card_payments, platform_payments },
 		} = accountInfo;
 		let account = false;
-		if (card_payments === 'active' && transfers === 'active') {
+		if (card_payments === 'active' && platform_payments === 'active') {
 			await DB.save('users', {
 				id,
 				stripe_connect: true,
