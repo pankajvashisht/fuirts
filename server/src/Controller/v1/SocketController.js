@@ -11,8 +11,8 @@ var socketConnect = '';
 const API = new ApiController();
 const sockets = (server) => {
 	const io = require('socket.io')(server);
+	socketConnect = io;
 	io.on('connection', (socket) => {
-		socketConnect = socket;
 		socket.on('disconnect', (user_id) => {
 			console.log('users leave the room', user_id);
 			socket.leave(user_id);
@@ -90,7 +90,7 @@ OrderEvent.on('orderSuccess', async (shopId, orderDetail) => {
 	if (authorization_key) {
 		const result = await orderDetails(orderDetail.order_id);
 		if (result) {
-			socketConnect.broadcast.to(shopId).emit('newOrder', result);
+			socketConnect.to(shopId).emit('newOrder', result);
 			console.log('result done');
 		}
 	} else {
