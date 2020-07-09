@@ -75,9 +75,19 @@ module.exports = sockets;
 
 OrderEvent.on('orderSuccess', async (shopId, orderDetail) => {
 	console.log('order done!', shopId, orderDetail);
-	const result = await orderDetails(orderDetail.order_id);
-	if (result) {
-		socketConnect.broadcast.to(shopId).emit('newOrder', result);
-		console.log('result done');
+	const { authorization_key } = await DB.find('users', 'first', {
+		conditions: {
+			id: shopId,
+		},
+		fields: ['authorization_key'],
+	});
+	if (authorization_key) {
+		const result = await orderDetails(orderDetail.order_id);
+		if (result) {
+			socketConnect.broadcast.to(shopId).emit('newOrder', result);
+			console.log('result done');
+		}
+	} else {
+		console.log('User not avaiable');
 	}
 });
