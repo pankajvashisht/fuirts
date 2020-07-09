@@ -40,7 +40,6 @@ class Query {
 				query += ' where ';
 				let its_first = 0;
 				for (let c in condition.conditions) {
-					console.log(c);
 					if (c === 'or') {
 						for (let a in condition.conditions[c]) {
 							if (its_first === 0) {
