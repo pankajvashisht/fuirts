@@ -21,10 +21,9 @@ const sockets = (server) => {
 			socket.join(user_id, () => {
 				let rooms = Object.keys(socket.rooms);
 				console.log(rooms); // [ <socket.id>, 'room 237' ]
-				io.to(user_id).emit('a new user has joined the room'); // broadcast to everyone in the room
+				io.to(user_id).emit('connected', user_id); // broadcast to everyone in the room
 			});
 			console.log('user join the socket', user_id);
-			socket.broadcast.to(user_id).emit('connected', user_id);
 		});
 
 		socket.on('newOrder', async ({ orderId }) => {
