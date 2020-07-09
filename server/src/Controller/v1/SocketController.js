@@ -18,7 +18,11 @@ const sockets = (server) => {
 			socket.leave(user_id);
 		});
 		socket.on('connected', (user_id) => {
-			socket.join(user_id);
+			socket.join(user_id, () => {
+				let rooms = Object.keys(socket.rooms);
+				console.log(rooms); // [ <socket.id>, 'room 237' ]
+				io.to(user_id).emit('a new user has joined the room'); // broadcast to everyone in the room
+			});
 			console.log('user join the socket', user_id);
 			socket.broadcast.to(user_id).emit('connected', user_id);
 		});
@@ -26,7 +30,7 @@ const sockets = (server) => {
 		socket.on('newOrder', async ({ orderId }) => {
 			const result = await orderDetails(orderId);
 			if (result) {
-				io.to(result.shop_id).emit('newOrder', result);
+				socket.broadcast.to(result.shop_id).emit('newOrder', result);
 				console.log('working');
 			}
 		});
@@ -59,8 +63,7 @@ const sockets = (server) => {
 						);
 						API.sendPush(user_id, notificationObject);
 					}, 0);
-					io.to(result.user_id).emit('orderAccept', result);
-					console.log('i am here', result.user_id);
+					socket.broadcast.to(result.user_id).emit('orderAccept', result);
 				}
 			}
 		);
