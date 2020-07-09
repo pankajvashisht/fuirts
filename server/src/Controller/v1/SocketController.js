@@ -29,7 +29,7 @@ const sockets = (server) => {
 		socket.on('newOrder', async ({ orderId }) => {
 			const result = await orderDetails(orderId);
 			if (result) {
-				socket.broadcast.to(result.shop_id).emit('newOrder', result);
+				io.to(result.shop_id).emit('newOrder', result);
 				console.log('working');
 			}
 		});
