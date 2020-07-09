@@ -62,7 +62,7 @@ const sockets = (server) => {
 						);
 						API.sendPush(user_id, notificationObject);
 					}, 0);
-					socket.broadcast.to(result.user_id).emit('orderAccept', result);
+					io.to(result.user_id).emit('orderAccept', result);
 				}
 			}
 		);
