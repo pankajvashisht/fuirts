@@ -1,5 +1,7 @@
 const { OrderEvent } = require('../../Events');
 const ApiController = require('./ApiController');
+const Db = require('../../../libary/sqlBulider');
+const DB = new Db();
 const {
 	saveNotification,
 	orderDetails,
