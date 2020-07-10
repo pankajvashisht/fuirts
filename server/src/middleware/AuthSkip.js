@@ -18,6 +18,7 @@ const skipRoutes = {
 	home: 'GET',
 	'shop/product': 'GET',
 	'stripe-connect': 'GET',
+	'user/soical-check': 'POST',
 };
 const AuthSkip = (Req, res, next) => {
 	res.auth = true;

@@ -105,6 +105,29 @@ class UserController extends ApiController {
 		};
 	}
 
+	async checkSoical(Request) {
+		const required = {
+			social_id: Request.body.social_id,
+		};
+		const requestData = await super.vaildation(required, {});
+		const soicalInfo = await DB.find('users', 'first', {
+			conditions: {
+				social_id: requestData.social_id,
+			},
+			fields: ['id'],
+		});
+		let isRegister = 0;
+		if (soicalInfo) {
+			isRegister = 1;
+		}
+		return {
+			message: app.Message('LoginMessage'),
+			data: {
+				isRegister,
+			},
+		};
+	}
+
 	async forgotPassword(req) {
 		let required = {
 			email: req.body.email,
@@ -337,6 +360,6 @@ const paymentRegister = (RequestData, user_id) => {
 		user_id,
 	});
 	if (parseInt(user_type) !== 0) {
-		PaymentController.createAccount(user_id, email, card_informations);
+		//PaymentController.createAccount(user_id, email, card_informations);
 	}
 };
