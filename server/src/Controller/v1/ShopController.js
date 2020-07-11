@@ -333,7 +333,7 @@ module.exports = {
 	myOrders: async (Request) => {
 		const user_id = Request.body.user_id;
 		const user_type = Request.body.userInfo.user_type;
-		let offset = Request.params.offset || 1;
+		let offset = Request.query.offset || 1;
 		const { order_status = 0, limit = 10 } = Request.query;
 		offset = (offset - 1) * limit;
 		const conditions = {};
