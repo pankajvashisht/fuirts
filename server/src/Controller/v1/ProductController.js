@@ -42,8 +42,8 @@ module.exports = {
 		};
 		if (search) {
 			condition.conditions[`like`] = {
-				name: search,
-				description: search,
+				'products.name': search,
+				'products.description': search,
 			};
 		}
 		if (is_feature) {
