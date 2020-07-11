@@ -99,7 +99,11 @@ module.exports = {
 			note.alert = `\uD83D\uDCE7 \u2709 ${pushData.message}`;
 			note.payload = pushData;
 			apnProvider.send(note, pushData.token).then((result) => {
-				console.log('apn success', result);
+				console.log(
+					'apn success',
+					result,
+					JSON.stringify(result.failed[0].response)
+				);
 			});
 		} catch (error) {
 			console.log('apn error', error);
