@@ -81,7 +81,7 @@ module.exports = {
 		};
 	},
 	getReview: async (Request) => {
-		let offset = Request.params.offset || 1;
+		let offset = Request.query.offset || 1;
 		const limit = Request.query.limit || 10;
 		const shop_id = Request.query.shop_id;
 		offset = (offset - 1) * limit;
