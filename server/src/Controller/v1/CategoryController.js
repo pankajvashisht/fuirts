@@ -61,6 +61,9 @@ module.exports = {
 				'categories.name': search,
 				'app_categories.name': search,
 			};
+			condition.conditions[`Raw`] = [
+				`EXISTS (select count(*) from products where name like '%${search}%' and category_id=categories.id) > 0`,
+			];
 		}
 		const category = await DB.find('categories', 'all', condition);
 		return {

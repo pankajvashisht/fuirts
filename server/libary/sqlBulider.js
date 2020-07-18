@@ -99,6 +99,13 @@ class Query {
 							likeCount++;
 							its_first++;
 						}
+					} else if (c === 'Raw') {
+						if (its_first === 0) {
+							query += condition.conditions[c].join();
+						} else {
+							query += ` and ${condition.conditions[c].join()} `;
+						}
+						its_first++;
 					} else if (c === 'location') {
 						if (its_first === 0) {
 							query += ` ${condition.conditions[c][0]} `;
@@ -172,7 +179,7 @@ class Query {
 	}
 
 	async first(qry) {
-		//console.log(qry);
+		console.log(qry);
 		const query = String(qry);
 		try {
 			let result = new Promise((resolve, reject) => {
