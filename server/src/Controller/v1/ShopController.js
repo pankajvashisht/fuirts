@@ -16,6 +16,7 @@ module.exports = {
 			newShop = false,
 			highRated = false,
 			category_id = 0,
+			radius = 2000000,
 		} = Request.query;
 		offset = (offset - 1) * limit;
 		const condition = {
@@ -23,7 +24,7 @@ module.exports = {
 				user_type: 2,
 				status: 1,
 				location: [
-					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < 2000000`,
+					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < ${radius}`,
 				],
 			},
 			fields: [
