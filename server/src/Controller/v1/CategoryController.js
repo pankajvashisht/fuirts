@@ -59,7 +59,7 @@ module.exports = {
 		}
 		if (search) {
 			condition.conditions[`Raw`] = [
-				`(EXISTS (select name from products where name like '%${search}%' and user_id = ${user_id} and category_id=categories.id) or categories.name like '%${search}%')`,
+				`(EXISTS (select name from products where name like '%${search}%' and user_id = ${user_id} and category_id=categories.id limit 1) or categories.name like '%${search}%')`,
 			];
 		}
 		const category = await DB.find('categories', 'all', condition);

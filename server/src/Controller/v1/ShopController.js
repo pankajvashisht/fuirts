@@ -67,7 +67,7 @@ module.exports = {
 		}
 		if (search) {
 			condition.conditions[`Raw`] = [
-				`(EXISTS (select name from products where name like '%${search}%' and user_id = users.id) or (first_name like '%${search}%' or  last_name like '%${search}%'))`,
+				`(EXISTS (select name from products where name like '%${search}%' and user_id = users.id limit 1) or (first_name like '%${search}%' or  last_name like '%${search}%'))`,
 			];
 		}
 		const result = await DB.find('users', 'all', condition);
