@@ -38,6 +38,7 @@ module.exports = {
 		const { app_category_id = 0 } = Request.params;
 		let offset = Request.query.offset || 1;
 		const { limit = 10, search = '' } = Request.query;
+		const { user_id = 0 } = Request.body;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
@@ -57,12 +58,8 @@ module.exports = {
 			condition.conditions[`app_category_id`] = app_category_id;
 		}
 		if (search) {
-			condition.conditions[`like`] = {
-				'categories.name': search,
-				'app_categories.name': search,
-			};
 			condition.conditions[`Raw`] = [
-				`EXISTS (select count(*) from products where name like '%${search}%' and category_id=categories.id) > 0`,
+				`(EXISTS (select count(*) from products where name like '%${search}%' and user_id = ${user_id} and category_id=categories.id) or categories.name like '%${search}%')`,
 			];
 		}
 		const category = await DB.find('categories', 'all', condition);
