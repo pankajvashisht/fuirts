@@ -136,7 +136,7 @@ module.exports = {
 		shopListing: 'liste de la boutique',
 		appCategory: `Liste des catégories d'application`,
 		category: 'Liste des catégories',
-		wrongLogin: 'Correo o contraseña equivocada',
+		wrongLogin: 'Mauvais email ou mot de passe',
 		subCategory: 'Liste des sous-catégories',
 		authKeyRequired: 'Se requiere clave de clave de autorización',
 		invaildAuth: 'Autorización de invasión',
