@@ -43,6 +43,7 @@ router
 			successData.error = true;
 			successData.success = true;
 			successData.message = 'Invaild Url';
+			successData.confirmPassword = false;
 		}
 		res.render('changepassword', successData);
 	})
@@ -59,6 +60,7 @@ router
 			},
 		});
 		if (!checkAuth) {
+			successData.confirmPassword = false;
 			return res.render('changepassword', successData);
 		}
 		if (req.body.password.length === 0) {
