@@ -10,6 +10,7 @@ class UserController extends ApiController {
 		super();
 		this.addUser = this.addUser.bind(this);
 		this.loginUser = this.loginUser.bind(this);
+		this.checkEmail = this.checkEmail.bind(this);
 	}
 
 	async addUser(Request) {
@@ -37,6 +38,32 @@ class UserController extends ApiController {
 		return {
 			message: app.Message('signup'),
 			data: usersInfo,
+		};
+	}
+	async checkEmail(Request) {
+		const required = {
+			type: Request.body.type,
+			value: Request.body.value,
+		};
+		const RequestData = await super.vaildation(required, {});
+		const { type, value } = RequestData;
+		const condition = {
+			conditions: {},
+		};
+		if (parseInt(type) === 1) {
+			condition.conditions = { email: value };
+		} else {
+			condition.conditions = { phone: value };
+		}
+		const result = await DB.find('users', 'first', condition);
+		if (result) {
+			throw new ApiError(
+				app.Message(parseInt(type) === 1 ? 'emailRegister' : 'phoneRegister')
+			);
+		}
+		return {
+			message: app.Message('signup'),
+			data: {},
 		};
 	}
 	async verifyOtp(req) {

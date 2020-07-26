@@ -146,9 +146,8 @@ module.exports = {
 		fieldsRequired: 'Se requiere campo',
 		ChangePassword: 'Changer le mot de passe avec succès',
 		phoneRegister:
-			'El número de teléfono ya está registrado. Por favor use otro',
-		emailRegister:
-			'El correo electrónico ya está registrado. Por favor use otro',
+			'Le numéro de téléphone est déjà enregistré. Veuillez utiliser un autre',
+		emailRegister: `L'e-mail est déjà enregistré. Veuillez utiliser un autre`,
 		verifyOtp: 'Otp verifica con éxito',
 		invaildOtp: 'Otp inválido',
 		otpSend: 'Otp envíe su correo electrónico de registro',

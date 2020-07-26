@@ -28,6 +28,7 @@ router.get('/', function (req, res) {
 router.post('/user', userSignup, Apiresponse(user.addUser));
 router.post('/user/soical-check', Apiresponse(user.checkSoical));
 router.post('/user/login/', Apiresponse(user.loginUser));
+router.post('/user/email-check', Apiresponse(user.checkEmail));
 router.post('/user/verify', Apiresponse(user.verifyOtp));
 router.post('/user/soical-login', Apiresponse(user.soicalLogin));
 router.put('/user/edit/', Apiresponse(user.updateProfile));
