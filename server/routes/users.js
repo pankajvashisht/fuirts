@@ -50,6 +50,7 @@ router
 		let successData = {
 			error: true,
 			success: true,
+			confirmPassword: false,
 			message: 'Something Went Wrong',
 		};
 		const checkAuth = await DB.find('users', 'first', {
@@ -65,6 +66,7 @@ router
 			return res.render('changepassword', successData);
 		}
 		if (req.body.password !== req.body.confirm_password) {
+			successData.confirmPassword = true;
 			successData.message = 'Confirm passoword is not match with password';
 			return res.render('changepassword', successData);
 		}
