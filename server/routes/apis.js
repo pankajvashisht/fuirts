@@ -37,6 +37,7 @@ router.post('/forgot-password', Apiresponse(user.forgotPassword));
 router.post('/logout', Apiresponse(user.logout));
 router.get('/app-information', Apiresponse(user.appInfo));
 router.get('/shop/listing', Apiresponse(ShopController.getShop));
+router.get('/shop/search', Apiresponse(ShopController.searchShop));
 router.post('/order', Apiresponse(ShopController.orderFurit));
 router.get('/order', Apiresponse(ShopController.myOrders));
 router.post('/order/repeat', Apiresponse(ShopController.repeatOrder));

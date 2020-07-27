@@ -27,29 +27,7 @@ module.exports = {
 					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < ${radius}`,
 				],
 			},
-			fields: [
-				'id',
-				'first_name',
-				'last_name',
-				'min_order',
-				'accept_order',
-				'status',
-				'is_free',
-				'is_online',
-				'email',
-				'phone',
-				'phone_code',
-				'profile',
-				'address',
-				'user_type',
-				'latitude',
-				'longitude',
-				'service_fees',
-				'delivery_charges',
-				'taxes',
-				`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
-				`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
-			],
+			fields: fieldView(latitude, longitude),
 			limit: [offset, limit],
 			orderBy: ['first_name desc'],
 		};
@@ -251,29 +229,7 @@ module.exports = {
 					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < 2000000`,
 				],
 			},
-			fields: [
-				'id',
-				'first_name',
-				'last_name',
-				'accept_order',
-				'status',
-				'is_free',
-				'is_online',
-				'min_order',
-				'email',
-				'phone',
-				'phone_code',
-				'profile',
-				'address',
-				'user_type',
-				'latitude',
-				'longitude',
-				'service_fees',
-				'delivery_charges',
-				'taxes',
-				`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
-				`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
-			],
+			fields: fieldView(latitude, longitude),
 			limit: 10,
 			orderBy: ['id desc'],
 		};
@@ -419,6 +375,84 @@ module.exports = {
 			},
 		};
 	},
+	searchShop: async (Request) => {
+		let offset = Request.query.offset || 1;
+		const {
+			limit = 10,
+			latitude = 0,
+			longitude = 0,
+			search = '',
+			radius = 2000000,
+		} = Request.query;
+		offset = (offset - 1) * limit;
+		const { user_id = 0 } = Request.body;
+		const condition = {
+			conditions: {
+				Raw: [
+					`(first_name like '%${search}%' or  last_name like '%${search}%'))`,
+				],
+				user_type: 2,
+				status: 1,
+				location: [
+					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < ${radius}`,
+				],
+			},
+			fields: fieldView(latitude, longitude),
+			limit: [offset, limit],
+			orderBy: ['first_name desc'],
+		};
+		const productConditions = {
+			conditions: {
+				Raw: [`(name like '%${search}%' or  description like '%${search}%'))`],
+				'products.status': 1,
+				location: [
+					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < ${radius}`,
+				],
+			},
+			join: [
+				'users on (users.id = products.user_id)',
+				'categories on (categories.id = products.category_id)',
+			],
+			fields: [
+				'products.*',
+				'categories.name as category_name',
+				`(select count(id) from favourite_products where user_id=${user_id} and product_id=products.id) as is_fav`,
+				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
+				'users.address',
+				'users.profile',
+				'users.service_fees',
+				'users.delivery_charges',
+				'users.taxes',
+			],
+			limit: [offset, limit],
+			orderBy: ['id desc'],
+		};
+		const shop = await DB.find('users', 'all', condition);
+		const product = await DB.find('products', 'all', productConditions);
+		return {
+			message: app.Message('shopListing'),
+			data: {
+				shops: {
+					pagination: await Helper.Paginations(
+						'users',
+						condition,
+						offset,
+						limit
+					),
+					result: app.addUrl(shop, 'profile'),
+				},
+				products: {
+					pagination: await Helper.Paginations(
+						'products',
+						productConditions,
+						offset,
+						limit
+					),
+					result: app.addUrl(product, ['image', 'profile']),
+				},
+			},
+		};
+	},
 	orderDetails: async (Request) => {
 		const user_id = Request.body.user_id;
 		const user_type = Request.body.userInfo.user_type;
@@ -545,4 +579,30 @@ const pushSend = (RequestData, productDetails) => {
 
 const saveNotification = async (data) => {
 	DB.save('notifications', data);
+};
+
+const fieldView = (latitude, longitude) => {
+	return [
+		'id',
+		'first_name',
+		'last_name',
+		'min_order',
+		'accept_order',
+		'status',
+		'is_free',
+		'is_online',
+		'email',
+		'phone',
+		'phone_code',
+		'profile',
+		'address',
+		'user_type',
+		'latitude',
+		'longitude',
+		'service_fees',
+		'delivery_charges',
+		'taxes',
+		`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
+		`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
+	];
 };
