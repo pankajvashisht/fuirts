@@ -421,10 +421,13 @@ module.exports = {
 				`(select count(id) from favourite_products where user_id=${user_id} and product_id=products.id) as is_fav`,
 				`CONCAT(users.first_name, " ", users.last_name) as shop_name`,
 				'users.address',
+				'users.first_name',
+				'users.last_name',
 				'users.profile',
 				'users.service_fees',
 				'users.delivery_charges',
 				'users.taxes',
+				'2 as type',
 			],
 			limit: [offset, limit],
 			orderBy: ['id desc'],
@@ -433,26 +436,10 @@ module.exports = {
 		const product = await DB.find('products', 'all', productConditions);
 		return {
 			message: app.Message('shopListing'),
-			data: {
-				shops: {
-					pagination: await Helper.Paginations(
-						'users',
-						condition,
-						offset,
-						limit
-					),
-					result: app.addUrl(shop, 'profile'),
-				},
-				products: {
-					pagination: await Helper.Paginations(
-						'products',
-						productConditions,
-						offset,
-						limit
-					),
-					result: app.addUrl(product, ['image', 'profile']),
-				},
-			},
+			data: [
+				...app.addUrl(product, ['image', 'profile']),
+				...app.addUrl(shop, 'profile'),
+			],
 		};
 	},
 	orderDetails: async (Request) => {
@@ -604,6 +591,7 @@ const fieldView = (latitude, longitude) => {
 		'service_fees',
 		'delivery_charges',
 		'taxes',
+		'1 as type',
 		`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
 		`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`,
 	];
