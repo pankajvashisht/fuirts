@@ -404,7 +404,7 @@ module.exports = {
 		const productConditions = {
 			conditions: {
 				Raw: [
-					`(products.name like '%${search}%' or  products.description like '%${search}%')`,
+					`(products.name like '%${search}%' or  products.description like '%${search}%' or categories.name like '%${search}%')`,
 				],
 				'products.status': 1,
 				location: [
