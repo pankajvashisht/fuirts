@@ -382,6 +382,7 @@ module.exports = {
 			latitude = 0,
 			longitude = 0,
 			search = '',
+			category_id = 0,
 			radius = 2000000,
 		} = Request.query;
 		offset = (offset - 1) * limit;
@@ -404,7 +405,7 @@ module.exports = {
 		const productConditions = {
 			conditions: {
 				Raw: [
-					`(products.name like '%${search}%' or  products.description like '%${search}%' or categories.name like '%${search}%')`,
+					`(products.name like '%${search}%' or  products.description like '%${search}%')`,
 				],
 				'products.status': 1,
 				location: [
@@ -432,6 +433,9 @@ module.exports = {
 			limit: [offset, limit],
 			orderBy: ['id desc'],
 		};
+		if (parseInt(category_id) !== 0) {
+			productConditions.conditions.category_id = category_id;
+		}
 		const shop = await DB.find('users', 'all', condition);
 		const product = await DB.find('products', 'all', productConditions);
 		return {
