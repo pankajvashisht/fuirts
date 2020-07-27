@@ -389,7 +389,7 @@ module.exports = {
 		const condition = {
 			conditions: {
 				Raw: [
-					`(first_name like '%${search}%' or  last_name like '%${search}%'))`,
+					`(first_name like '%${search}%' or  last_name like '%${search}%')`,
 				],
 				user_type: 2,
 				status: 1,
