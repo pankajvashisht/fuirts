@@ -424,6 +424,7 @@ module.exports = {
 				'users.address',
 				'users.first_name',
 				'users.last_name',
+				'users.phone',
 				'users.profile',
 				'users.service_fees',
 				'users.delivery_charges',
