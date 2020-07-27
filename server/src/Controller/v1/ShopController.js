@@ -403,7 +403,9 @@ module.exports = {
 		};
 		const productConditions = {
 			conditions: {
-				Raw: [`(name like '%${search}%' or  description like '%${search}%')`],
+				Raw: [
+					`(products.name like '%${search}%' or  products.description like '%${search}%')`,
+				],
 				'products.status': 1,
 				location: [
 					`round(( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ),0) < ${radius}`,
