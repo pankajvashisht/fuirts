@@ -542,7 +542,6 @@ const checkAllProducts = async (product_id, quantity) => {
 		if (value.stock === 0 || qyt > value.stock) {
 			throw new ApiError(app.Message('stockError'), 422);
 		}
-		console.log(value);
 		(value.totalPrice = qyt * value.price), (value.qyt = qyt);
 		if (value.image.length > 0) {
 			value.image = app.ImageUrl(value.image);
@@ -553,7 +552,7 @@ const checkAllProducts = async (product_id, quantity) => {
 			productWithShop[value.user_id][productDetails].push(value);
 		} else {
 			productWithShop[value.user_id] = {
-				productDetails: [].push(value),
+				productDetails: [value],
 				totalQyt: value.qyt,
 				price: value.totalPrice,
 			};
