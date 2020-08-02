@@ -542,23 +542,24 @@ const checkAllProducts = async (product_id, quantity) => {
 		if (value.stock === 0 || qyt > value.stock) {
 			throw new ApiError(app.Message('stockError'), 422);
 		}
+		console.log(value);
 		(value.totalPrice = qyt * value.price), (value.qyt = qyt);
 		if (value.image.length > 0) {
 			value.image = app.ImageUrl(value.image);
 		}
 		if (Object.prototype.hasOwnProperty.call(productWithShop, value.shop_id)) {
-			productWithShop[value.shop_id][totalQyt] += value.qyt;
-			productWithShop[value.shop_id][price] += value.totalPrice;
+			productWithShop[value.user_id][totalQyt] += value.qyt;
+			productWithShop[value.user_id][price] += value.totalPrice;
 		} else {
-			productWithShop[value.shop_id] = {
+			productWithShop[value.user_id] = {
 				productDetails: new Array(),
 				totalQyt: value.qyt,
 				price: value.totalPrice,
 			};
 		}
 		console.log(productWithShop);
-		console.log(Array.isArray(productWithShop[value.shop_id][productDetails]));
-		productWithShop[value.shop_id][productDetails].push(value);
+		console.log(Array.isArray(productWithShop[value.user_id][productDetails]));
+		productWithShop[value.user_id][productDetails].push(value);
 		productDetails.push(value);
 	});
 	console.log(productWithShop);
