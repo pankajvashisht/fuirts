@@ -564,7 +564,6 @@ const checkAllProducts = async (product_id, quantity) => {
 		productDetails.push(value);
 	});
 	console.log(productWithShop);
-	break;
 	return [productDetails, productWithShop];
 };
 
