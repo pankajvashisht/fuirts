@@ -80,7 +80,6 @@ const sockets = (server) => {
 module.exports = sockets;
 
 OrderEvent.on('orderSuccess', async (shopId, orderDetail) => {
-	console.log('order done!', shopId, orderDetail);
 	const { authorization_key } = await DB.find('users', 'first', {
 		conditions: {
 			id: shopId,
