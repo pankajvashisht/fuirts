@@ -550,6 +550,7 @@ const checkAllProducts = async (product_id, quantity) => {
 			productWithShop[value.user_id][totalQyt] += parseInt(value.qyt);
 			productWithShop[value.user_id][price] += parseInt(value.totalPrice);
 			productWithShop[value.user_id][productDetails].push(value);
+			console.log(productWithShop);
 		} else {
 			productWithShop[value.user_id] = {
 				productDetails: [value],
@@ -557,9 +558,6 @@ const checkAllProducts = async (product_id, quantity) => {
 				price: value.totalPrice,
 			};
 		}
-		console.log(productWithShop);
-		console.log(Array.isArray(productWithShop[value.user_id][productDetails]));
-
 		productDetails.push(value);
 	});
 	console.log(productWithShop);
