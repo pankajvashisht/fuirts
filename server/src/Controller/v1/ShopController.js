@@ -111,7 +111,7 @@ module.exports = {
 			coupon_id,
 			quantity,
 		} = RequestData;
-		const [productDetails, price, totalQyt] = await checkAllProducts(
+		const [productDetails, productWithShop] = await checkAllProducts(
 			product_id,
 			quantity
 		);
@@ -132,22 +132,29 @@ module.exports = {
 			if (!couponDetails) throw new ApiError(app.Message('coupenInvaild'), 422);
 			RequestData.coupon_details = JSON.stringify(couponDetails);
 		}
-		RequestData.shop_id = productDetails[0].user_id;
-		RequestData.product_details = JSON.stringify(productDetails);
-		RequestData.price = price;
-		RequestData.quantity = totalQyt;
+
 		updateProduct(productDetails, quantity);
-		RequestData.address_details = JSON.stringify(addressDetails);
-		RequestData.order_id = await DB.save('orders', RequestData);
-		productDetails['order_id'] = RequestData.order_id;
-		setTimeout(() => {
-			pushSend(RequestData, productDetails);
-		}, 100);
-		RequestData.product_details = JSON.parse(RequestData.product_details);
-		RequestData.address_details = JSON.parse(RequestData.address_details);
+		const orderDetails = [];
+		for (const keys in productWithShop) {
+			RequestData.shop_id = keys;
+			RequestData.price = productWithShop[keys].price;
+			RequestData.quantity = productWithShop[keys].totalQyt;
+			RequestData.product_details = JSON.stringify(
+				productWithShop[keys].productDetails
+			);
+			RequestData.address_details = JSON.stringify(addressDetails);
+			RequestData.order_id = await DB.save('orders', RequestData);
+			setTimeout(() => {
+				pushSend(RequestData, productWithShop[keys].productDetails);
+			}, 10);
+			RequestData.product_details = JSON.parse(RequestData.product_details);
+			RequestData.address_details = JSON.parse(RequestData.address_details);
+			orderDetails.push(RequestData);
+		}
+
 		return {
 			message: app.Message('orderSuccess'),
-			data: RequestData,
+			data: orderDetails,
 		};
 	},
 	doPayment: async (Request) => {
@@ -528,20 +535,31 @@ const checkAllProducts = async (product_id, quantity) => {
 	}
 	let price = 0;
 	let totalQyt = 0;
-	const productQyt = products.map((value, key) => {
+	const productWithShop = {};
+	const productDetails = [];
+	products.forEach((value, key) => {
 		const qyt = parseInt(quantityArray[key]);
 		if (value.stock === 0 || qyt > value.stock) {
 			throw new ApiError(app.Message('stockError'), 422);
 		}
 		(value.totalPrice = qyt * value.price), (value.qyt = qyt);
-		price += value.totalPrice;
 		if (value.image.length > 0) {
 			value.image = app.ImageUrl(value.image);
 		}
-		totalQyt += qyt;
-		return value;
+		if (Object.prototype.hasOwnProperty.call(productWithShop, value.shop_id)) {
+			productWithShop[value.shop_id][productDetails].push(value);
+			productWithShop[value.shop_id][totalQyt] += value.qyt;
+			productWithShop[value.shop_id][price] += value.totalPrice;
+		} else {
+			productWithShop[value.shop_id] = {
+				productDetails: [value],
+				totalQyt: value.qyt,
+				price: value.totalPrice,
+			};
+		}
+		productDetails.push(value);
 	});
-	return [productQyt, price, totalQyt];
+	return [productDetails, productWithShop];
 };
 
 const updateProduct = async (product, qyt) => {
