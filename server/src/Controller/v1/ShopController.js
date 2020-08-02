@@ -133,25 +133,26 @@ module.exports = {
 			RequestData.coupon_details = JSON.stringify(couponDetails);
 		}
 
-		updateProduct(productDetails, quantity);
 		const orderDetails = [];
+		RequestData.address_details = JSON.stringify(addressDetails);
 		for (const keys in productWithShop) {
-			RequestData.shop_id = keys;
-			RequestData.price = productWithShop[keys].price;
-			RequestData.quantity = productWithShop[keys].totalQyt;
-			RequestData.product_details = JSON.stringify(
+			const orderDetail = { ...RequestData };
+			orderDetail.shop_id = keys;
+			orderDetail.price = productWithShop[keys].price;
+			orderDetail.quantity = productWithShop[keys].totalQyt;
+			orderDetail.product_details = JSON.stringify(
 				productWithShop[keys].productDetails
 			);
-			RequestData.address_details = JSON.stringify(addressDetails);
-			RequestData.order_id = await DB.save('orders', RequestData);
-			setTimeout(() => {
-				pushSend(RequestData, productWithShop[keys].productDetails);
-			}, 10);
-			RequestData.product_details = JSON.parse(RequestData.product_details);
-			RequestData.address_details = JSON.parse(RequestData.address_details);
-			orderDetails.push(RequestData);
-		}
 
+			orderDetail.order_id = await DB.save('orders', orderDetail);
+			setTimeout(() => {
+				pushSend(orderDetail, productWithShop[keys].productDetails);
+			}, 10);
+			orderDetail.product_details = JSON.parse(orderDetail.product_details);
+			orderDetail.address_details = JSON.parse(RequestData.address_details);
+			orderDetails.push(orderDetail);
+		}
+		updateProduct(productDetails, quantity);
 		return {
 			message: app.Message('orderSuccess'),
 			data: orderDetails,
@@ -533,8 +534,6 @@ const checkAllProducts = async (product_id, quantity) => {
 	if (products.length !== totalProdict.length) {
 		throw new ApiError(app.Message('productInvaild'), 422);
 	}
-	let price = 0;
-	let totalQyt = 0;
 	const productWithShop = {};
 	const productDetails = [];
 	products.forEach((value, key) => {
@@ -559,7 +558,6 @@ const checkAllProducts = async (product_id, quantity) => {
 		productWithShop[value.user_id]['productDetails'].push(value);
 		productDetails.push(value);
 	});
-	console.log(productWithShop);
 	return [productDetails, productWithShop];
 };
 
