@@ -100,7 +100,6 @@ module.exports = {
 			discout: Request.body.discout || 0,
 			coupon_id: Request.body.coupon_id || 0,
 			payment_details: Request.body.payment_details || {},
-			order_otp: app.randomNumber(),
 			status: 1,
 		};
 		const RequestData = await Helper.vaildation(required, {});
@@ -138,6 +137,7 @@ module.exports = {
 		for (const keys in productWithShop) {
 			const orderDetail = { ...RequestData };
 			orderDetail.shop_id = keys;
+			orderDetail.order_otp = app.randomNumber();
 			orderDetail.price = productWithShop[keys].price;
 			orderDetail.quantity = productWithShop[keys].totalQyt;
 			orderDetail.product_details = JSON.stringify(
