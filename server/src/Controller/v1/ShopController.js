@@ -546,7 +546,7 @@ const checkAllProducts = async (product_id, quantity) => {
 		if (value.image.length > 0) {
 			value.image = app.ImageUrl(value.image);
 		}
-		if (Object.prototype.hasOwnProperty.call(productWithShop, value.shop_id)) {
+		if (Object.prototype.hasOwnProperty.call(productWithShop, value.user_id)) {
 			productWithShop[value.user_id][totalQyt] += parseInt(value.qyt);
 			productWithShop[value.user_id][price] += parseInt(value.totalPrice);
 			productWithShop[value.user_id][productDetails].push(value);
