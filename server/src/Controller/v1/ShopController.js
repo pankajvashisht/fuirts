@@ -553,7 +553,7 @@ const checkAllProducts = async (product_id, quantity) => {
 			productWithShop[value.user_id][productDetails].push(value);
 		} else {
 			productWithShop[value.user_id] = {
-				productDetails: new Array().push(value),
+				productDetails: [].push(value),
 				totalQyt: value.qyt,
 				price: value.totalPrice,
 			};
