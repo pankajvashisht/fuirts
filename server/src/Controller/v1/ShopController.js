@@ -556,7 +556,7 @@ const checkAllProducts = async (product_id, quantity) => {
 				price: value.totalPrice,
 			};
 		}
-		console.log(productWithShop[value.shop_id]);
+		console.log(productWithShop);
 		console.log(Array.isArray(productWithShop[value.shop_id][productDetails]));
 		productWithShop[value.shop_id][productDetails].push(value);
 		productDetails.push(value);
