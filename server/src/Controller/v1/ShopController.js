@@ -551,7 +551,7 @@ const checkAllProducts = async (product_id, quantity) => {
 			productWithShop[value.shop_id][price] += value.totalPrice;
 		} else {
 			productWithShop[value.shop_id] = {
-				productDetails: [],
+				productDetails: new Array(),
 				totalQyt: value.qyt,
 				price: value.totalPrice,
 			};
