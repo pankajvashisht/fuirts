@@ -547,18 +547,19 @@ const checkAllProducts = async (product_id, quantity) => {
 			value.image = app.ImageUrl(value.image);
 		}
 		if (Object.prototype.hasOwnProperty.call(productWithShop, value.shop_id)) {
-			productWithShop[value.shop_id][productDetails].push(value);
 			productWithShop[value.shop_id][totalQyt] += value.qyt;
 			productWithShop[value.shop_id][price] += value.totalPrice;
 		} else {
 			productWithShop[value.shop_id] = {
-				productDetails: [value],
+				productDetails: [],
 				totalQyt: value.qyt,
 				price: value.totalPrice,
 			};
 		}
+		productWithShop[value.shop_id][productDetails].push(value);
 		productDetails.push(value);
 	});
+	console.log(productWithShop);
 	return [productDetails, productWithShop];
 };
 
