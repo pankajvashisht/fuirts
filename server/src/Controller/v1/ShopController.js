@@ -550,16 +550,17 @@ const checkAllProducts = async (product_id, quantity) => {
 		if (Object.prototype.hasOwnProperty.call(productWithShop, value.shop_id)) {
 			productWithShop[value.user_id][totalQyt] += value.qyt;
 			productWithShop[value.user_id][price] += value.totalPrice;
+			productWithShop[value.user_id][productDetails].push(value);
 		} else {
 			productWithShop[value.user_id] = {
-				productDetails: new Array(),
+				productDetails: new Array().push(value),
 				totalQyt: value.qyt,
 				price: value.totalPrice,
 			};
 		}
 		console.log(productWithShop);
 		console.log(Array.isArray(productWithShop[value.user_id][productDetails]));
-		productWithShop[value.user_id][productDetails].push(value);
+
 		productDetails.push(value);
 	});
 	console.log(productWithShop);
